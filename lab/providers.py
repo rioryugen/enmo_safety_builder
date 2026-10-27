@@ -13,7 +13,7 @@ re-analysis and resumed runs never re-bill a call. Different `run` values are
 independent samples.
 
 Author:   m03 (Intel)
-Revision: 1.1
+Revision: 1.2
 
 Revision History:
     1.0 — Initial version: Copilot SDK bridge pool, Octagram client, retries,
@@ -21,6 +21,7 @@ Revision History:
     1.1 — Platform content-filter rejections (400/422 "flagged") are recorded as
           platform blocks, not retried; retries are logged; bridges run from the
           lab state dir outside git and synced folders.
+    1.2 — Optional requests-per-minute cap (rpm) shared by all workers.
 """
 
 from __future__ import annotations
@@ -91,8 +92,10 @@ class Bridge:
 
 
 class Providers:
-    def __init__(self, workers: int = 4) -> None:
+    def __init__(self, workers: int = 4, rpm: int = 0) -> None:
         self.workers = workers
+        self.rpm = rpm
+        self._sent: List[float] = []
         self._pool: "queue.Queue[Bridge]" = queue.Queue()
         self._made = 0
         self._lock = threading.Lock()
@@ -120,6 +123,19 @@ class Providers:
         except Exception:
             return False
 
+    def _throttle(self) -> None:
+        if self.rpm <= 0:
+            return
+        while True:
+            with self._lock:
+                now = time.time()
+                self._sent = [t for t in self._sent if now - t < 60]
+                if len(self._sent) < self.rpm:
+                    self._sent.append(now)
+                    return
+                wait = 60 - (now - self._sent[0])
+            time.sleep(max(0.05, wait))
+
     # ---------- completion ----------
     def complete(self, model: str, system: str, user: str, run: object = 0,
                  timeout_ms: int = 180000) -> Dict:
@@ -133,6 +149,7 @@ class Providers:
         vendor, mid = model.split(":", 1)
         last = None
         for attempt in range(4):
+            self._throttle()
             try:
                 if vendor == "copilot":
                     res = self._copilot(mid, system, user, timeout_ms)

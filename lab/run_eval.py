@@ -23,11 +23,13 @@ Flags:
     --dry-run            print the plan and the call budget, call nothing
 
 Author:   m03 (Intel)
-Revision: 1.0
+Revision: 1.1
 
 Revision History:
     1.0 — Initial version: resumable matrix, guarded/unguarded conditions,
           cross-judging, call-budget dry run.
+    1.1 — --offset for fresh items; conditions spot (spotlighting only, an
+          ablation), v<k> (any snapshot) and vN; --rpm rate cap.
 """
 
 from __future__ import annotations
@@ -48,29 +50,33 @@ from providers import Providers
 ALL_BENCH = ("harmbench", "advbench", "jbb", "xstest", "agentharm", "injection")
 
 
-def load_items(split: str, benches: List[str], n: Optional[int]) -> List[Dict]:
+def load_items(split: str, benches: List[str], n: Optional[int], offset: int = 0) -> List[Dict]:
     data = jread(DATA / "benchmarks.json")
     if data is None:
         sys.exit("run bench_data.py first")
     items = []
     for b in benches:
-        rows = data["benchmarks"][b][split]
+        rows = data["benchmarks"][b].get(split, [])[offset:]
         items += rows[:n] if n else rows
     return items
 
 
 def harness_for(cond: str, vn_dir: Optional[str]):
-    if cond == "bare":
+    """bare | spot (spotlighting only) | v<k> (snapshot) | vN (current canonical)."""
+    if cond in ("bare", "spot"):
         return None
-    if cond == "v0":
-        return rt.load_harness(SAFETY / "harness" / "versions" / "v0")
+    if cond.startswith("v") and cond[1:].isdigit():
+        return rt.load_harness(SAFETY / "harness" / "versions" / cond)
     return rt.load_harness(Path(vn_dir) if vn_dir else SAFETY / "harness")
 
 
 def one(providers: Providers, model: str, cond: str, harness, item: Dict, run: int,
         judge_model: str, judges: List[str] = ()) -> Dict:
     untrusted = item.get("untrusted")
-    if harness is None:
+    if cond == "spot":
+        system, user = rt.bare(item["prompt"], None)[0], rt.spotlight(item["prompt"], untrusted)
+        assessment = {}
+    elif harness is None:
         system, user = rt.bare(item["prompt"], untrusted)
         assessment = {}
     else:
@@ -138,17 +144,19 @@ def main() -> int:
     ap.add_argument("--runs", type=int, default=3)
     ap.add_argument("--split", default="test")
     ap.add_argument("--n", type=int, default=None)
+    ap.add_argument("--offset", type=int, default=0, help="skip the first K items per benchmark (fresh items)")
+    ap.add_argument("--rpm", type=int, default=0, help="cap model requests per minute (0 = off)")
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--vn", default=None)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    providers = Providers(workers=args.workers)
+    providers = Providers(workers=args.workers, rpm=args.rpm)
     try:
         models = [m for m in args.models.split(",") if m] or providers.live_models()
         conds = [c for c in args.conditions.split(",") if c]
         benches = [b for b in args.benchmarks.split(",") if b]
-        items = load_items(args.split, benches, args.n)
+        items = load_items(args.split, benches, args.n, args.offset)
         judges = [j for j in args.judges.split(",") if j]
         n_gen = len(models) * len(conds) * len(items) * args.runs
         print(f"models: {models}\nconditions: {conds}\nitems: {len(items)} x runs {args.runs}"
