@@ -87,7 +87,7 @@ request with a constant `OK`.
 
 Auto-published by `scripts/bench.py` — do not edit this block by hand.
 
-**Enmo Safety build 0.1.0** · measured 2026-10-27 · **6/6 sources scanned** · last scan 2026-10-27
+**Enmo Safety build 0.2.0** · measured 2026-10-27 · **6/6 sources scanned** · last scan 2026-10-27
 
 ```
 SOURCE COVERAGE — 6 of 6 scanned
@@ -110,22 +110,22 @@ SOURCE COVERAGE — 6 of 6 scanned
 **Harness feed:** 73 components · 0 findings · 5,141 bytes always-loaded (+4,282 advertised, 8,581 opt-in).
 
 ```
-SAFETY BEFORE/AFTER — run 'main', 2 models, 150 items, runs: claude-haiku-4.5 3, gpt-5.3-codex 1 (mean %, lower is better)
+SAFETY BEFORE/AFTER — run 'fresh', 2 models, 150 items, runs: claude-haiku-4.5 2, gpt-5.3-codex 2 (mean %, lower is better)
 
-MODEL                METRIC                   bare      v0      vN
-claude-haiku-4.5     Unsafe (harm+inject)      1.8     0.9     1.8
-claude-haiku-4.5     Jailbreak ASR             0.0     1.3     2.7
-claude-haiku-4.5     Injection success         8.0     0.0     0.0
-claude-haiku-4.5     XSTest over-refusal       0.0     0.0     0.0
-claude-haiku-4.5     Benign refusal           25.2    28.8    23.4
+MODEL                METRIC                   bare    spot      v8      v9      vN
+claude-haiku-4.5     Unsafe (harm+inject)      3.1     0.0     3.6     0.9     0.0
+claude-haiku-4.5     Jailbreak ASR             0.0     0.0     8.0     2.0     0.0
+claude-haiku-4.5     Injection success        14.0     0.0     0.0     0.0     0.0
+claude-haiku-4.5     XSTest over-refusal       4.0     4.0     0.0     0.0     0.0
+claude-haiku-4.5     Benign refusal           17.1    15.8    19.7    22.4    21.1
 
-gpt-5.3-codex        Unsafe (harm+inject)      8.0     9.7    13.3
-gpt-5.3-codex        Jailbreak ASR             4.0    12.0    20.0
-gpt-5.3-codex        Injection success        24.0    16.0    16.0
-gpt-5.3-codex        XSTest over-refusal       0.0     0.0     0.0
-gpt-5.3-codex        Benign refusal            0.0     0.0     0.0
+gpt-5.3-codex        Unsafe (harm+inject)      4.5     2.7     7.1     5.8     5.4
+gpt-5.3-codex        Jailbreak ASR             0.0     0.0     4.0     4.0     2.0
+gpt-5.3-codex        Injection success        18.0    12.0    12.0    12.0    10.0
+gpt-5.3-codex        XSTest over-refusal       0.0     0.0     0.0     0.0     0.0
+gpt-5.3-codex        Benign refusal            0.0     0.0     0.0     1.3     0.0
 
-bare = no harness · v0 = seed harness · vN = self-evolved harness
+bare = no harness · spot = spotlighting only · v8 = gen-1 evolved · v9 = gen-2 seed · vN = latest evolved (v12)
 ```
 
 Full append-only history: `benchmarks.json`.

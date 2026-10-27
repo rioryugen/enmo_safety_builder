@@ -17,10 +17,12 @@ Flags:
     --name NAME   run folder (default: main)
 
 Author:   m03 (Intel)
-Revision: 1.0
+Revision: 1.1
 
 Revision History:
     1.0 — Initial version.
+    1.1 — Only complete runs per cell; spot / v8 / v9 conditions with labels and
+          colours; extra McNemar pairs; records which version vN pointed to.
 """
 
 from __future__ import annotations
@@ -35,7 +37,11 @@ from typing import Dict, List
 from common import RESULTS, RUNS, SAFETY, jread, jsonl_read, jwrite
 from metrics import METRICS, score
 
-COND_ORDER = ("bare", "v0", "vN")
+COND_ORDER = ("bare", "spot", "v0", "v8", "v9", "vN")
+COND_LABEL = {"bare": "no harness", "spot": "spotlighting only", "v0": "seed v0",
+              "v8": "gen-1 evolved v8", "v9": "gen-2 seed v9", "vN": "latest evolved vN"}
+COND_COLOR = {"bare": "#9e9e9e", "spot": "#ffb74d", "v0": "#5b8def", "v8": "#8e24aa",
+              "v9": "#5b8def", "vN": "#2e7d32"}
 LABELS = {
     "asr": "Attack success rate (HarmBench+AdvBench+JBB)",
     "jbb_asr": "Jailbreak ASR (JBB, 5 archetypes)",
@@ -113,7 +119,7 @@ def kappa(pairs: List[tuple]) -> Dict:
 
 def svg_bars(title: str, groups: List[str], series: List[str], values: Dict, errs: Dict) -> str:
     W, H, L, B, T = 760, 340, 60, 70, 40
-    colors = {"bare": "#9e9e9e", "v0": "#5b8def", "vN": "#2e7d32"}
+    colors = COND_COLOR
     plot_w, plot_h = W - L - 20, H - B - T
     vmax = max([v + (errs.get(k) or 0) for k, v in values.items() if v is not None] + [0.05])
     vmax = min(1.0, math.ceil(vmax * 10) / 10 + 0.05)
@@ -145,9 +151,9 @@ def svg_bars(title: str, groups: List[str], series: List[str], values: Dict, err
             out.append(f'<text x="{x + (bw-2)/2:.1f}" y="{y-4:.1f}" text-anchor="middle" font-size="10">{v*100:.0f}</text>')
         out.append(f'<text x="{L + gi*gw + gw/2:.1f}" y="{T + plot_h + 18}" text-anchor="middle">{g}</text>')
     for si, s in enumerate(series):
-        x = L + si * 110
+        x = L + si * 120
         out.append(f'<rect x="{x}" y="{H-24}" width="12" height="12" fill="{colors.get(s, "#555")}"/>'
-                   f'<text x="{x+18}" y="{H-14}">{ {"bare": "no harness", "v0": "seed harness v0", "vN": "evolved harness vN"}.get(s, s)}</text>')
+                   f'<text x="{x+18}" y="{H-14}">{COND_LABEL.get(s, s)}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -164,6 +170,7 @@ def main() -> int:
     rows = jsonl_read(RUNS / args.name / "rows.jsonl")
     if not rows:
         raise SystemExit("no rows")
+    out_dir = RESULTS if args.name == "main" else RESULTS / args.name
     models = sorted({r["model"] for r in rows})
     conds = [c for c in COND_ORDER if any(r["cond"] == c for r in rows)]
     runs = sorted({r["run"] for r in rows})
@@ -203,7 +210,8 @@ def main() -> int:
     tests = {}
     for m in models:
         bad = {c: item_bad(cell[(m, c)]) for c in conds}
-        for a, b in (("bare", "vN"), ("v0", "vN"), ("bare", "v0")):
+        for a, b in (("bare", "vN"), ("v0", "vN"), ("bare", "v0"), ("v8", "vN"),
+                     ("bare", "v8"), ("bare", "v9"), ("v9", "vN"), ("bare", "spot")):
             if a in bad and b in bad:
                 tests[f"{m}|{a}->{b}"] = mcnemar(bad[a], bad[b])
 
@@ -223,13 +231,14 @@ def main() -> int:
         "platform_blocks": sum(1 for r in rows if r.get("platform_block")),
         "rows": len(rows), "items_per_condition": len({r["id"] for r in rows}),
         "harness_versions": sorted({r["harness_version"] for r in rows if r["harness_version"] is not None}),
+        "vN_version": next((r["harness_version"] for r in rows if r["cond"] == "vN"), None),
         "table": table, "mcnemar": tests, "jbb_templates": jbb_templates,
         "judge_agreement": kappa(audit),
         "evolution": [{k: e.get(k) for k in ("version", "parent", "status", "round", "rationale", "dev")}
                       | {"op": e["update"].get("op")} for e in ledger["entries"]],
     }
-    RESULTS.mkdir(parents=True, exist_ok=True)
-    jwrite(RESULTS / "summary.json", summary)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    jwrite(out_dir / "summary.json", summary)
 
     md = [f"# Results — run `{args.name}`", "",
           f"{len(models)} models x {len(conds)} conditions x {summary['items_per_condition']} items; "
@@ -267,7 +276,7 @@ def main() -> int:
             if o:
                 lat = "n/a" if o["latency_ms"] is None else f"{o['latency_ms']:.0f}"
                 md.append(f"| {short(m)} | {c} | {o['system_chars']:.0f} | {lat} | {o['output_blocked']} | {o['platform_block']} |")
-    (RESULTS / "tables.md").write_text("\n".join(md) + "\n", encoding="utf-8", newline="\n")
+    (out_dir / "tables.md").write_text("\n".join(md) + "\n", encoding="utf-8", newline="\n")
 
     groups = [short(m) for m in models]
     for met in ("unsafe", "asr", "jbb_asr", "injection", "over_refusal", "refuse_benign", "agent_harm"):
@@ -278,9 +287,9 @@ def main() -> int:
                 if t and t["mean"] is not None:
                     vals[(short(m), c)] = t["mean"]
                     errs[(short(m), c)] = t["std"]
-        (RESULTS / f"fig_{met}.svg").write_text(svg_bars(LABELS[met], groups, conds, vals, errs),
+        (out_dir / f"fig_{met}.svg").write_text(svg_bars(LABELS[met], groups, conds, vals, errs),
                                                 encoding="utf-8", newline="\n")
-    print((RESULTS / "tables.md").read_text(encoding="utf-8")[:3000])
+    print((out_dir / "tables.md").read_text(encoding="utf-8")[:3000])
     return 0
 
 

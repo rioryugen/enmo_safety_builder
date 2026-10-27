@@ -11,6 +11,7 @@ Flags:
     --publish          compute + write the benchmark block into both READMEs
     --json             machine-readable metrics (no record, no publish)
     --root <dir>       builder root (default: this repo)
+    --run <name>       lab run to publish: main -> results/, other -> results/<name>/
 
 The benchmark block lives between `<!-- BEGIN BENCHMARK -->` and
 `<!-- END BENCHMARK -->` markers in each README. --publish replaces ONLY that
@@ -21,7 +22,7 @@ Metrics are read from the canonical harness (../enmo_safety/) via enmo_lib, and 
 the builder registry + scan ledger via builder.py. No third-party deps.
 
 Author:   m03 (Intel)
-Revision: 1.4
+Revision: 1.5
 
 Revision History:
     1.0 — Initial version: harness + builder metrics, append-only benchmarks.json
@@ -39,6 +40,8 @@ Revision History:
     1.4 — Safety builder: measures ../enmo_safety; publishes a SAFETY BEFORE/AFTER
           block (bare / v0 / vN per model) from results/summary.json and records
           the headline in benchmarks.json.
+    1.5 — --run selects which lab run to publish; legend built from the run's
+          conditions (spot, v8, v9, latest version).
 """
 
 from __future__ import annotations
@@ -82,6 +85,7 @@ BUILDER_ROOT = find_root(Path(__file__).resolve().parent)
 WORKSPACE = BUILDER_ROOT.parent
 CANON = WORKSPACE / "enmo_safety"
 SAFETY_SUMMARY = BUILDER_ROOT / "results" / "summary.json"
+RUN_NAME = "main"
 
 # Reuse the canonical library and the builder's registry/ledger loaders.
 sys.path.insert(0, str(CANON / "scripts"))
@@ -380,10 +384,11 @@ def block_harness(m: dict, history: list, landscape: dict) -> str:
 
 
 def load_safety() -> dict:
-    if not SAFETY_SUMMARY.is_file():
+    path = SAFETY_SUMMARY if RUN_NAME == "main" else BUILDER_ROOT / "results" / RUN_NAME / "summary.json"
+    if not path.is_file():
         return {}
     try:
-        return json.loads(SAFETY_SUMMARY.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError:
         return {}
 
@@ -413,7 +418,11 @@ def block_safety(s: dict) -> str:
                 cells.append(f"{'n/a' if v is None else f'{v*100:.1f}':>8}")
             lines.append(f"{model.split(':', 1)[1][:19]:<20} {label:<21}" + "".join(cells))
         lines.append("")
-    lines += ["bare = no harness · v0 = seed harness · vN = self-evolved harness", "```"]
+    legend = {"bare": "no harness", "spot": "spotlighting only", "v0": "seed harness",
+              "v8": "gen-1 evolved", "v9": "gen-2 seed",
+              "vN": f"latest evolved (v{s['vN_version']})" if s.get("vN_version") is not None
+              else "self-evolved harness"}
+    lines += [" · ".join(f"{c} = {legend.get(c, c)}" for c in conds), "```"]
     return "\n".join(lines)
 
 
@@ -503,7 +512,10 @@ def main() -> int:
                         help="compute + write the benchmark block into both READMEs")
     parser.add_argument("--json", action="store_true", help="machine-readable metrics")
     parser.add_argument("--root", default=None, help="builder root")
+    parser.add_argument("--run", default="main", help="results run to publish (results/<run>/)")
     args = parser.parse_args()
+    global RUN_NAME
+    RUN_NAME = args.run
 
     root = Path(args.root) if args.root else BUILDER_ROOT
     m = measure(CANON)

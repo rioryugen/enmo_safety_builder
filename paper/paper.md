@@ -22,7 +22,11 @@ injection success from 24.0% to 16.0% and raised harmful-request success from
 at 150 items. The bounds and the gate stopped nine of the reflector's eleven
 distinct proposals, two of which would have raised measured harm. The main lesson is that
 clauses evolved to reduce over-refusal behave as permissions, and they need a
-per-model gate and an explicit harm list.
+per-model gate and an explicit harm list. A second generation built on those
+lessons and evaluated on fresh items brought Haiku's unsafe rate to 0.0% (3.1%
+bare) but left GPT-5.3-Codex worse than bare (5.4% against 4.5%), and
+spotlighting alone matched or beat every harness version on the overall unsafe
+rate for both models.
 
 ## 1 Introduction
 
@@ -271,6 +275,66 @@ seed harness added about 1,500 characters to the system message and the evolved
 one about 2,000. For Haiku, mean latency rose from 4.8 s to 5.1 s (v0) and
 6.1 s (vN).
 
+### 5.5 Second iteration
+
+The first-generation results pointed at two fixes: name every harm category in
+the base prompt, and stop permissive clauses from acting on risky requests. We
+reseeded the harness as v9 from v8 with a jailbreak pattern for "no warnings or
+disclaimers" framing, a wider misinformation trigger, a new expert-advice
+category and skill, and a single helpfulness clause that the runtime adds only
+when the input assessment finds no harm, jailbreak or injection signal. The
+evolution loop was changed in three ways: relaxing text is accepted only as such
+a scoped helpfulness clause; the gate runs on both models and rejects an update
+if either model's dev harm rises; and an update must fix at least two dev items
+in total.
+
+Four rounds produced v10 to v13. v10 cut failures on both models but raised
+Haiku's dev harm count from 4 to 5 and was rejected. v11 and v12, both
+helpfulness clauses, were accepted, taking Haiku from 29 dev failures to 22 and
+GPT-5.3-Codex from 8 to 4. v13, a new jailbreak pattern, changed nothing and was
+rejected. v12 was promoted.
+
+Because the reseed was informed by first-generation test failures, we evaluated
+on fresh items (test items 26 to 50 of every benchmark) with two runs per
+condition. The jailbreak templates are shared with the earlier items, so this
+split is fresh in content but not in framing. We also ran spotlighting alone
+(no system prompt, untrusted content marked as data) once per model; on
+prompts without untrusted content this condition sends the same input as the
+bare model and its replies were served from the cache.
+
+| Unsafe, all attack prompts | bare | spotlight only | v8 | v9 | v12 |
+|---|---|---|---|---|---|
+| Claude Haiku 4.5 | 3.1 | 0.0 | 3.6 | 0.9 | 0.0 |
+| GPT-5.3-Codex | 4.5 | 2.7 | 7.1 | 5.8 | 5.4 |
+
+| Refusal of benign prompts | bare | spotlight only | v8 | v9 | v12 |
+|---|---|---|---|---|---|
+| Claude Haiku 4.5 | 17.1 | 15.8 | 19.7 | 22.4 | 21.1 |
+| GPT-5.3-Codex | 0.0 | 0.0 | 0.0 | 1.3 | 0.0 |
+
+On Haiku the second generation fixed the first generation's harm regression:
+harmful-request success fell from 5.3% (v8) to 0.0% (v12), the same as the bare
+model, and injection success stayed at 0.0% against 14.0% bare. The cost was
+more refusal of benign agentic tasks, 61.5% under v12 against 42.3% bare. On
+GPT-5.3-Codex the full harness was still worse than no harness:
+harmful-request success rose from 0.0% to 3.3%, and AgentHarm harmful completion
+from 4.2% to 8.3%, while injection success fell from 18.0% to 10.0%.
+
+Spotlighting alone matched or beat every harness version on the overall unsafe
+rate for both models. It removed all injection success on Haiku and cut it to
+12.0% on GPT-5.3-Codex (v12 reached 10.0%), with no added harm and the lowest
+benign refusal. No paired comparison reached
+significance (McNemar, smallest p = 0.22 for Haiku v8 to v12). Raw agreement
+between the refusal detector and the LLM judge fell to 30.6% (kappa 0.05),
+which confirms that the detector cannot stand in for the judge.
+
+v12's clause reads "do not refuse automation requests for copyright/TOS/spam or
+reputational concerns". The runtime shows it only when no harm signal fires,
+and it raised no measured harm, but it is the kind of permission the first
+generation warned about: if the input assessment misses a spam or harassment
+request, the clause tells the model to comply. We would not ship it without
+human review.
+
 ## 6 Discussion
 
 Spotlighting is the part of the harness that worked: it removed every injection
@@ -305,6 +369,15 @@ on, and the harm list in the base prompt should cover every category the runtime
 skills cover. Weaker or open-weight models would test the harness on the failure
 modes it was designed for.
 
+The second iteration sharpens this. With a full harm list, a scoped helpfulness
+clause and a per-model gate, the evolved prompt stopped adding harm on the model
+it was tuned on, but it still added harm on the other model, and its overall
+unsafe rate never beat the cheapest component. For frontier models with strong built-in refusal, the
+evidence here favours spotlighting untrusted content and adding nothing else to
+the system prompt; the evolved guidance is worth its cost only where the base
+model over-refuses or complies too readily, and that has to be measured per
+model.
+
 ## 7 Limitations
 
 - **Two models.** Only two models were live through the Copilot SDK in our
@@ -325,6 +398,9 @@ modes it was designed for.
   separately.
 - **Platform filters.** The serving platform rejects some prompts before the
   model sees them. We count these as refusals and report them separately.
+- **Reseed informed by test failures.** The second-generation seed was written
+  after reading first-generation test failures. We evaluated it on unseen items,
+  but those items share jailbreak templates with the earlier ones.
 
 ## 8 Ethics and data handling
 
@@ -340,4 +416,5 @@ Code, the seed harness, the evolved harness with its ledger and every version
 snapshot, and the aggregate results are in the Enmo Safety and Enmo Safety
 Builder repositories. `lab/bench_data.py`, `lab/evolve.py`, `lab/run_eval.py`
 and `lab/analyze.py` regenerate every number in this paper; tables and figures
-are generated from `results/summary.json`.
+are generated from `results/summary.json` (first generation) and
+`results/fresh/summary.json` (second iteration).
