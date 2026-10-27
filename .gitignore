@@ -1,0 +1,30 @@
+# Shallow clones of upstream sources are staging, not committed content.
+sources/*
+!sources/.gitkeep
+# Integrations are git clones restored by `python scripts/builder.py --clone <name>`.
+integrations/*/
+
+# Lab: raw benchmark data, raw model replies and the response cache stay local.
+lab/data/
+lab/runs/
+lab/cache/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+*.swp
+
+# LaTeX build output
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.pdf

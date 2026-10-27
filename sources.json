@@ -1,0 +1,68 @@
+{
+  "sources": [
+    {
+      "name": "enmo",
+      "url": "https://github.com/intel-sandbox/harness.enmo.git",
+      "ref": "master",
+      "ref_date": "2026-10-27T13:45:00",
+      "role": "parent harness; cloned into enmo_safety with the safety- namespace by scripts/clone_from_enmo.py"
+    },
+    {
+      "name": "humanizer",
+      "url": "https://github.com/rioryugen/humanizer.git",
+      "ref": "main",
+      "path": "integrations/humanizer",
+      "license": "MIT",
+      "ref_date": "2026-10-27T14:10:00",
+      "role": "integration: agent skill that removes signs of AI-generated writing; used for the paper's final prose pass"
+    },
+    {
+      "name": "HarmBench",
+      "url": "https://github.com/centerforaisafety/HarmBench.git",
+      "ref": "main",
+      "license": "MIT",
+      "ref_date": "2026-10-27T14:10:00",
+      "role": "benchmark: harmful-behaviour refusal (Mazeika et al., arXiv 2402.04249); behaviours CSV + classifier prompt"
+    },
+    {
+      "name": "llm-attacks",
+      "url": "https://github.com/llm-attacks/llm-attacks.git",
+      "ref": "main",
+      "license": "MIT",
+      "ref_date": "2026-10-27T14:10:00",
+      "role": "benchmark: AdvBench harmful_behaviors.csv (Zou et al., arXiv 2307.15043)"
+    },
+    {
+      "name": "jailbreakbench",
+      "url": "https://github.com/JailbreakBench/jailbreakbench.git",
+      "ref": "main",
+      "license": "MIT",
+      "ref_date": "2026-10-27T14:10:00",
+      "role": "benchmark: JBB-Behaviors (Chao et al., arXiv 2404.01318)"
+    },
+    {
+      "name": "xstest",
+      "url": "https://github.com/paul-rottger/xstest.git",
+      "ref": "main",
+      "license": "CC-BY-4.0",
+      "ref_date": "2026-10-27T14:10:00",
+      "role": "benchmark: exaggerated-safety / over-refusal prompts (Rottger et al., arXiv 2308.01263)"
+    }
+  ],
+  "datasets": [
+    {"id": "csv:HarmBench", "url": "https://raw.githubusercontent.com/centerforaisafety/HarmBench/main/data/behavior_datasets/harmbench_behaviors_text_all.csv", "license": "MIT", "note": "walledai/HarmBench on HF is gated; the original CSV is public"},
+    {"id": "csv:AdvBench", "url": "https://raw.githubusercontent.com/llm-attacks/llm-attacks/main/data/advbench/harmful_behaviors.csv", "license": "MIT", "note": "walledai/AdvBench on HF is gated; the original CSV is public"},
+    {"id": "hf:Paul/XSTest", "config": "default", "split": "train", "license": "CC-BY-4.0"},
+    {"id": "hf:JailbreakBench/JBB-Behaviors", "config": "behaviors", "split": "harmful,benign", "license": "MIT"},
+    {"id": "hf:ai-safety-institute/AgentHarm", "config": "harmful,harmless_benign", "split": "test_public", "license": "MIT with AgentHarm usage terms"},
+    {"id": "hf:deepset/prompt-injections", "config": "default", "split": "train,test", "license": "Apache-2.0"}
+  ],
+  "papers": [
+    {"arxiv": "2609.02786", "title": "SafeEvolve: Harness-Policy Co-Evolution from Agent Experience for Safety Alignment", "used_for": "bounded, auditable, reversible harness updates from trajectory evidence"},
+    {"arxiv": "2605.11882", "title": "On-Policy Self-Evolution via Failure Trajectories for Agentic Safety Alignment (FATE)", "used_for": "failures as repair supervision; Pareto safety-utility gate"},
+    {"arxiv": "2509.26100", "title": "SafeEvalAgent: Toward Agentic and Self-Evolving Safety Evaluation of LLMs", "used_for": "self-evolving evaluation; red-team hardening between rounds"},
+    {"arxiv": "2505.11063", "title": "Think Twice Before You Act: Enhancing Agent Behavioral Safety with Thought Correction", "used_for": "plug-in, model-agnostic safety layer"},
+    {"arxiv": "2605.03242", "title": "Enhancing Agent Safety Judgment: Controlled Benchmark Rewriting and Analogical Reasoning (ROME/ARISE)", "used_for": "retrieval-guided safety exemplars; deceptive rewrites"},
+    {"arxiv": "2607.20121", "title": "OpenSkillRisk: Benchmarking Agent Safety When Using Real-World Risky Third-Party Skills", "used_for": "skill-supply-chain risk motivating namespaced, reviewed skills"}
+  ]
+}

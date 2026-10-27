@@ -1,0 +1,71 @@
+{
+  "enmo_build": "0.1.0",
+  "sources": {
+    "HarmBench": {
+      "changes": [],
+      "enmo_build": "0.1.0",
+      "local_commit": "8e1604d",
+      "ref": "main",
+      "scan_date": "2026-10-27",
+      "scan_time": "2026-10-27T14:01:40",
+      "upstream_commit": "8e1604d"
+    },
+    "enmo": {
+      "changes": [
+        {
+          "added": "Cloned Enmo 1.8.0 into enmo_safety with the safety- namespace (12 skills, 8 agents, 12 commands) via clone_from_enmo.py",
+          "date": "2026-10-27",
+          "enmo_build": "0.1.0"
+        }
+      ],
+      "enmo_build": "0.1.0",
+      "local_commit": "fb0cbf0",
+      "ref": "master",
+      "scan_date": "2026-10-27",
+      "scan_time": "2026-10-27T14:01:06",
+      "upstream_commit": "fb0cbf0"
+    },
+    "humanizer": {
+      "changes": [
+        {
+          "added": "Vendored into integrations/humanizer; wired as skills/safety-paper-humanize for the paper prose pass",
+          "date": "2026-10-27",
+          "enmo_build": "0.1.0"
+        }
+      ],
+      "enmo_build": "0.1.0",
+      "local_commit": "8c307f3",
+      "ref": "main",
+      "scan_date": "2026-10-27",
+      "scan_time": "2026-10-27T14:01:08",
+      "upstream_commit": "8c307f3"
+    },
+    "jailbreakbench": {
+      "changes": [],
+      "enmo_build": "0.1.0",
+      "local_commit": "23dbdf6",
+      "ref": "main",
+      "scan_date": "2026-10-27",
+      "scan_time": "2026-10-27T14:01:52",
+      "upstream_commit": "23dbdf6"
+    },
+    "llm-attacks": {
+      "changes": [],
+      "enmo_build": "0.1.0",
+      "local_commit": "098262e",
+      "ref": "main",
+      "scan_date": "2026-10-27",
+      "scan_time": "2026-10-27T14:01:45",
+      "upstream_commit": "098262e"
+    },
+    "xstest": {
+      "changes": [],
+      "enmo_build": "0.1.0",
+      "local_commit": "d7bb5bd",
+      "ref": "main",
+      "scan_date": "2026-10-27",
+      "scan_time": "2026-10-27T14:01:59",
+      "upstream_commit": "d7bb5bd"
+    }
+  }
+}

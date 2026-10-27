@@ -1,0 +1,26 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{natbib}
+\input{generated/numbers.tex}
+
+\title{Enmo Safety: A Bounded, Self-Evolving Safety Harness\\for Off-the-Shelf Language Models}
+\author{m03 (Intel)}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+% The prose of this file mirrors paper.md, which is the edited source.
+% Tables and every number come from ../results/summary.json via build_tables.py.
+
+\input{body.tex}
+
+\input{generated/tables.tex}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}
