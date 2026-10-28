@@ -16,20 +16,21 @@ Flags:
     --conditions ...     default: bare,v0,vN
     --benchmarks ...     default: all six
     --runs N             independent samples per item (default 3)
-    --split S            test | dev | evolve (default test)
+    --split S            test | dev | evolve | probe | holdout (default test)
     --n N                cap items per benchmark (smoke tests)
     --workers N          parallel requests (default 6)
     --vn DIR             evolved harness dir
     --dry-run            print the plan and the call budget, call nothing
 
 Author:   m03 (Intel)
-Revision: 1.1
+Revision: 1.2
 
 Revision History:
     1.0 — Initial version: resumable matrix, guarded/unguarded conditions,
           cross-judging, call-budget dry run.
     1.1 — --offset for fresh items; conditions spot (spotlighting only, an
           ablation), v<k> (any snapshot) and vN; --rpm rate cap.
+    1.2 — Documents the probe and holdout splits.
 """
 
 from __future__ import annotations

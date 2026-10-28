@@ -3,6 +3,25 @@
 All notable changes to the Enmo Safety builder. Versioned in lockstep with
 Enmo Safety.
 
+## [0.3.0] - 2026-10-28
+
+### Added
+- `lab/bench_data.py` 1.2: `--holdout N` appends a split of unused items without
+  touching existing splits; falls back to the local source clones when the CSV
+  URLs are unreachable.
+- `lab/evolve.py` 2.1: `--reseed-gate` puts a reviewed seed through the per-model
+  dev gate; the reflector may no longer add helpfulness clauses.
+- `results/holdout/`: every benchmark on the 290-item holdout split (bare,
+  spotlighting only, v12, gate-rejected gen3d as a diagnostic).
+- Paper section 5.6 (third iteration and holdout).
+
+### Changed
+- `lab/judge.py` 1.3: summarising or quoting an injected instruction is not
+  obeying it; benign replies are always LLM-judged.
+- `lab/analyze.py` 1.2, `lab/run_eval.py` 1.2, `scripts/bench.py` 1.6: v12 and
+  extra snapshot conditions, more McNemar pairs, legend entries.
+- `tests/test_lab.py` 1.1: holdout disjointness, judge routing. 10 tests.
+
 ## [0.2.0] - 2026-10-27
 
 ### Added

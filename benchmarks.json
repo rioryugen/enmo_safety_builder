@@ -789,6 +789,318 @@
         "run": "fresh",
         "runs": 2
       }
+    },
+    {
+      "builder": {
+        "last_scan": "2026-10-27",
+        "registered": 6,
+        "scanned": 6,
+        "source_rows": [
+          {
+            "changes": 0,
+            "commit": "8e1604d",
+            "name": "HarmBench",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:40",
+            "status": "current"
+          },
+          {
+            "changes": 1,
+            "commit": "fb0cbf0",
+            "name": "enmo",
+            "ref": "master",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:06",
+            "status": "current"
+          },
+          {
+            "changes": 1,
+            "commit": "8c307f3",
+            "name": "humanizer",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:08",
+            "status": "current"
+          },
+          {
+            "changes": 0,
+            "commit": "23dbdf6",
+            "name": "jailbreakbench",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:52",
+            "status": "current"
+          },
+          {
+            "changes": 0,
+            "commit": "098262e",
+            "name": "llm-attacks",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:45",
+            "status": "current"
+          },
+          {
+            "changes": 0,
+            "commit": "d7bb5bd",
+            "name": "xstest",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:59",
+            "status": "current"
+          }
+        ]
+      },
+      "date": "2026-10-28",
+      "enmo_build": "0.2.0",
+      "harness": {
+        "agents": 11,
+        "blocking": 0,
+        "commands": 14,
+        "components": 73,
+        "context_advertised": 4282,
+        "context_always": 5141,
+        "context_opt_in": 8581,
+        "context_total": 18004,
+        "drift": 0,
+        "findings": 0,
+        "gaps": 0,
+        "hooks": 4,
+        "major": 0,
+        "minor": 0,
+        "rule_packs": 3,
+        "rules": 10,
+        "scripts": 9,
+        "skills": 19,
+        "templates": 6
+      },
+      "safety": {
+        "headline": {
+          "copilot:claude-haiku-4.5|injection": {
+            "bare": 0.1,
+            "spot": 0.0,
+            "v19": 0.0,
+            "vN": 0.0
+          },
+          "copilot:claude-haiku-4.5|jbb_asr": {
+            "bare": 0.0,
+            "spot": 0.0,
+            "v19": 0.0,
+            "vN": 0.0
+          },
+          "copilot:claude-haiku-4.5|over_refusal": {
+            "bare": 0.08,
+            "spot": 0.08,
+            "v19": 0.04,
+            "vN": 0.04
+          },
+          "copilot:claude-haiku-4.5|refuse_benign": {
+            "bare": 0.28,
+            "spot": 0.28,
+            "v19": 0.22666666666666666,
+            "vN": 0.28
+          },
+          "copilot:claude-haiku-4.5|unsafe": {
+            "bare": 0.027906976744186046,
+            "spot": 0.004651162790697674,
+            "v19": 0.004651162790697674,
+            "vN": 0.004651162790697674
+          },
+          "copilot:gpt-5.3-codex|injection": {
+            "bare": 0.0,
+            "spot": 0.0,
+            "v19": 0.0,
+            "vN": 0.0
+          },
+          "copilot:gpt-5.3-codex|jbb_asr": {
+            "bare": 0.05,
+            "spot": 0.05,
+            "v19": 0.0,
+            "vN": 0.025
+          },
+          "copilot:gpt-5.3-codex|over_refusal": {
+            "bare": 0.04,
+            "spot": 0.04,
+            "v19": 0.02,
+            "vN": 0.04
+          },
+          "copilot:gpt-5.3-codex|refuse_benign": {
+            "bare": 0.13333333333333333,
+            "spot": 0.13333333333333333,
+            "v19": 0.05333333333333334,
+            "vN": 0.05333333333333334
+          },
+          "copilot:gpt-5.3-codex|unsafe": {
+            "bare": 0.023255813953488372,
+            "spot": 0.023255813953488372,
+            "v19": 0.0,
+            "vN": 0.018604651162790697
+          }
+        },
+        "models": [
+          "copilot:claude-haiku-4.5",
+          "copilot:gpt-5.3-codex"
+        ],
+        "run": "holdout",
+        "runs": 1
+      }
+    },
+    {
+      "builder": {
+        "last_scan": "2026-10-27",
+        "registered": 6,
+        "scanned": 6,
+        "source_rows": [
+          {
+            "changes": 0,
+            "commit": "8e1604d",
+            "name": "HarmBench",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:40",
+            "status": "current"
+          },
+          {
+            "changes": 1,
+            "commit": "fb0cbf0",
+            "name": "enmo",
+            "ref": "master",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:06",
+            "status": "current"
+          },
+          {
+            "changes": 1,
+            "commit": "8c307f3",
+            "name": "humanizer",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:08",
+            "status": "current"
+          },
+          {
+            "changes": 0,
+            "commit": "23dbdf6",
+            "name": "jailbreakbench",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:52",
+            "status": "current"
+          },
+          {
+            "changes": 0,
+            "commit": "098262e",
+            "name": "llm-attacks",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:45",
+            "status": "current"
+          },
+          {
+            "changes": 0,
+            "commit": "d7bb5bd",
+            "name": "xstest",
+            "ref": "main",
+            "scan_date": "2026-10-27",
+            "scan_time": "2026-10-27T14:01:59",
+            "status": "current"
+          }
+        ]
+      },
+      "date": "2026-10-28",
+      "enmo_build": "0.3.0",
+      "harness": {
+        "agents": 11,
+        "blocking": 0,
+        "commands": 14,
+        "components": 73,
+        "context_advertised": 4282,
+        "context_always": 5141,
+        "context_opt_in": 8581,
+        "context_total": 18004,
+        "drift": 0,
+        "findings": 0,
+        "gaps": 0,
+        "hooks": 4,
+        "major": 0,
+        "minor": 0,
+        "rule_packs": 3,
+        "rules": 10,
+        "scripts": 9,
+        "skills": 19,
+        "templates": 6
+      },
+      "safety": {
+        "headline": {
+          "copilot:claude-haiku-4.5|injection": {
+            "bare": 0.1,
+            "spot": 0.0,
+            "v19": 0.0,
+            "vN": 0.0
+          },
+          "copilot:claude-haiku-4.5|jbb_asr": {
+            "bare": 0.0,
+            "spot": 0.0,
+            "v19": 0.0,
+            "vN": 0.0
+          },
+          "copilot:claude-haiku-4.5|over_refusal": {
+            "bare": 0.08,
+            "spot": 0.08,
+            "v19": 0.04,
+            "vN": 0.04
+          },
+          "copilot:claude-haiku-4.5|refuse_benign": {
+            "bare": 0.28,
+            "spot": 0.28,
+            "v19": 0.22666666666666666,
+            "vN": 0.28
+          },
+          "copilot:claude-haiku-4.5|unsafe": {
+            "bare": 0.027906976744186046,
+            "spot": 0.004651162790697674,
+            "v19": 0.004651162790697674,
+            "vN": 0.004651162790697674
+          },
+          "copilot:gpt-5.3-codex|injection": {
+            "bare": 0.0,
+            "spot": 0.0,
+            "v19": 0.0,
+            "vN": 0.0
+          },
+          "copilot:gpt-5.3-codex|jbb_asr": {
+            "bare": 0.05,
+            "spot": 0.05,
+            "v19": 0.0,
+            "vN": 0.025
+          },
+          "copilot:gpt-5.3-codex|over_refusal": {
+            "bare": 0.04,
+            "spot": 0.04,
+            "v19": 0.02,
+            "vN": 0.04
+          },
+          "copilot:gpt-5.3-codex|refuse_benign": {
+            "bare": 0.13333333333333333,
+            "spot": 0.13333333333333333,
+            "v19": 0.05333333333333334,
+            "vN": 0.05333333333333334
+          },
+          "copilot:gpt-5.3-codex|unsafe": {
+            "bare": 0.023255813953488372,
+            "spot": 0.023255813953488372,
+            "v19": 0.0,
+            "vN": 0.018604651162790697
+          }
+        },
+        "models": [
+          "copilot:claude-haiku-4.5",
+          "copilot:gpt-5.3-codex"
+        ],
+        "run": "holdout",
+        "runs": 1
+      }
     }
   ]
 }

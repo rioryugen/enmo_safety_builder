@@ -22,7 +22,7 @@ Metrics are read from the canonical harness (../enmo_safety/) via enmo_lib, and 
 the builder registry + scan ledger via builder.py. No third-party deps.
 
 Author:   m03 (Intel)
-Revision: 1.5
+Revision: 1.6
 
 Revision History:
     1.0 — Initial version: harness + builder metrics, append-only benchmarks.json
@@ -42,6 +42,7 @@ Revision History:
           the headline in benchmarks.json.
     1.5 — --run selects which lab run to publish; legend built from the run's
           conditions (spot, v8, v9, latest version).
+    1.6 — v12 legend entry; the latest version is labelled "latest", not "evolved".
 """
 
 from __future__ import annotations
@@ -419,8 +420,9 @@ def block_safety(s: dict) -> str:
             lines.append(f"{model.split(':', 1)[1][:19]:<20} {label:<21}" + "".join(cells))
         lines.append("")
     legend = {"bare": "no harness", "spot": "spotlighting only", "v0": "seed harness",
-              "v8": "gen-1 evolved", "v9": "gen-2 seed",
-              "vN": f"latest evolved (v{s['vN_version']})" if s.get("vN_version") is not None
+              "v8": "gen-1 evolved", "v9": "gen-2 seed", "v12": "gen-2 evolved",
+              "v19": "gen-3d seed (gate-rejected, diagnostic)",
+              "vN": f"latest (v{s['vN_version']})" if s.get("vN_version") is not None
               else "self-evolved harness"}
     lines += [" · ".join(f"{c} = {legend.get(c, c)}" for c in conds), "```"]
     return "\n".join(lines)

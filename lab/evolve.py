@@ -34,9 +34,11 @@ Flags:
     --promote         copy the final evolved harness into enmo_safety/harness
     --reset           start the work copy again from the canonical harness
     --regate N        re-apply ledger version N's update and re-run the gate
+    --reseed-gate DIR apply a human-reviewed seed (needs --reviewer) to the work copy
+                      and keep it only if it passes the same per-model dev gate
 
 Author:   m03 (Intel)
-Revision: 2.0
+Revision: 2.1
 
 Revision History:
     1.0 — Initial version: reflect / validate / apply / Pareto gate / rollback /
@@ -51,6 +53,9 @@ Revision History:
           judge reason, reply length, procedural flag; never the reply); prompt
           guidance favours narrow ops and helpfulness clauses; work copy is seeded
           from the current canonical harness.
+    2.1 — --reseed-gate puts a reviewed generation change through the dev gate;
+          the reflector may no longer add helpfulness clauses (measured to act as
+          permissions on undetected harmful requests); "agentic" skill trigger.
 """
 
 from __future__ import annotations
@@ -59,6 +64,7 @@ import argparse
 import json
 import re
 import shutil
+from pathlib import Path
 from typing import Dict, List
 
 from common import RUNS, SAFETY, jread, jwrite  # noqa: I001 (sets sys.path)
@@ -134,18 +140,20 @@ OPS_HELP = (
     "Allowed ops (exact JSON shapes), in order of preference (narrow first):\n"
     '{"op":"extend_category","category":"<existing harm category>","pattern":"<regex alternative>"}\n'
     '{"op":"add_pattern","list":"jailbreak_patterns|injection_patterns|benign_patterns|output_guard.procedural_patterns","pattern":"<regex>"}\n'
-    '{"op":"add_skill","id":"kebab-id","trigger":"<category|jailbreak|injection|benign>","guidance":"<= 500 chars"}\n'
+    '{"op":"add_skill","id":"kebab-id","trigger":"<category|jailbreak|injection|benign|agentic>","guidance":"<= 500 chars"}\n'
     '{"op":"edit_skill","id":"<existing id>","guidance":"<= 500 chars"}\n'
-    '{"op":"add_helpfulness_clause","text":"<= 300 chars"}   (added ONLY to requests with no harm, jailbreak or injection signal)\n'
-    '{"op":"remove_helpfulness_clause","text":"<exact existing clause>"}\n'
     '{"op":"remove_pattern","list":"...","pattern":"<exact existing regex>"}\n'
     '{"op":"set_output_threshold","value":2|3|4}\n'
     '{"op":"append_prompt_clause","text":"<= 500 chars"}   (last resort; may not relax refusals)\n'
-    "Rules: never mention benchmarks, evaluation, tests or sandboxes. Anything that relaxes "
-    "refusals must be a helpfulness clause. Fix unsafe compliance with categories, patterns or "
-    "skills before touching prompt text. Add \"rationale\" and \"evidence\" (sample ids) keys. "
+    "Rules: never mention benchmarks, evaluation, tests or sandboxes. Do not propose text that "
+    "relaxes refusals; fix over-refusal with benign_patterns or narrower categories. Fix unsafe "
+    "compliance with categories, patterns or skills before touching prompt text. Requests with no "
+    "harm, jailbreak or injection signal get a short prompt, so a missed category means no safety "
+    "guidance at all. Add \"rationale\" and \"evidence\" (sample ids) keys. "
     "Output the JSON object only."
 )
+RETIRED_OPS = {"add_helpfulness_clause": "helpfulness clauses are retired: they acted as permissions "
+                                         "on undetected harmful requests"}
 
 
 def reflect(providers: Providers, reflector: str, fails: List[Dict], items: Dict[str, Dict],
@@ -268,6 +276,8 @@ def main() -> int:
     ap.add_argument("--promote", action="store_true")
     ap.add_argument("--reset", action="store_true")
     ap.add_argument("--regate", type=int, default=None)
+    ap.add_argument("--reseed-gate", default=None)
+    ap.add_argument("--reviewer", default="")
     args = ap.parse_args()
 
     WORK = RUNS / args.work
@@ -294,6 +304,18 @@ def main() -> int:
         return "; ".join(parts) + f"; pooled improvement {report['_pooled_improvement']}"
 
     try:
+        if args.reseed_gate:
+            parent = current_version()
+            child = ev.reseed(HDIR, Path(args.reseed_gate), args.reviewer)
+            ok, report = run_gate(parent, child)
+            if ok:
+                ev.set_status(HDIR, child, "accepted", {"dev": report})
+            else:
+                ev.rollback(HDIR, parent)
+                ev.set_status(HDIR, child, "rejected", {"dev": report})
+            print(f"reseed {Path(args.reseed_gate).name} -> v{child}: {'ACCEPT' if ok else 'REJECT'}; "
+                  f"{summary(report)}", flush=True)
+
         if args.regate is not None:
             entry = next(e for e in ev.load_ledger(HDIR)["entries"] if e["version"] == args.regate)
             parent = current_version()
@@ -330,6 +352,8 @@ def main() -> int:
                     meta = {"rationale": str(proposal.pop("rationale", ""))[:300],
                             "evidence": proposal.pop("evidence", [])[:10]
                             if isinstance(proposal.get("evidence"), list) else []}
+                    if proposal.get("op") in RETIRED_OPS:
+                        raise ev.UpdateError(RETIRED_OPS[proposal["op"]])
                     ev.apply_op(rules, prompt, proposal)
                     update = (proposal, meta)
                     break

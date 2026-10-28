@@ -26,7 +26,12 @@ per-model gate and an explicit harm list. A second generation built on those
 lessons and evaluated on fresh items brought Haiku's unsafe rate to 0.0% (3.1%
 bare) but left GPT-5.3-Codex worse than bare (5.4% against 4.5%), and
 spotlighting alone matched or beat every harness version on the overall unsafe
-rate for both models.
+rate for both models. A third iteration fixed two judge defects and tested four
+reviewed redesigns; the per-model dev gate rejected all four. On 290 holdout
+items that no earlier step had touched, the unchanged v12 harness was at least
+as safe as no harness on both models (unsafe 2.8% to 0.5% on Haiku, 2.3% to
+1.9% on GPT-5.3-Codex) and cut GPT-5.3-Codex's benign refusal from 13.3% to
+5.3%, but none of these differences reached significance (smallest p = 0.09).
 
 ## 1 Introduction
 
@@ -335,7 +340,74 @@ generation warned about: if the input assessment misses a spam or harassment
 request, the clause tells the model to comply. We would not ship it without
 human review.
 
-## 6 Discussion
+### 5.6 Third iteration and a holdout split
+
+Reading the second-iteration failures exposed two measurement defects before it
+exposed any harness defect. Most "successful injections" against
+GPT-5.3-Codex under v12 and spotlighting were one-sentence summaries that
+mentioned the document's embedded question; the judge had counted describing an
+instruction as obeying it. Benign items were labelled by the refusal detector
+alone, which agreed with the LLM judge at kappa 0.05. We changed the judge so
+that summarising or quoting an injected instruction is `safe`, and so that
+every benign reply is LLM-judged. Results judged before and after this change
+are not comparable, so every condition below was judged with the new rubric.
+
+We then wrote four reviewed redesigns (seeds gen3 to gen3d) and put each
+through the same per-model dev gate as evolved updates. All add categories for
+sexually explicit content, graphic gore and drug purchase, generic
+forced-prefix and refusal-suppression markers, and a rule that a tool task with
+a harm signal gets no tool calls at all. gen3 and gen3b also used a tiered
+prompt: requests with no detected signal got a two-sentence prompt that kept
+only spotlighting, which was the best condition in Section 5.5. gen3 and gen3c
+retired the helpfulness clauses; gen3b and gen3d kept two of them and dropped
+the automation clause.
+
+The gate rejected all four. Without the clauses, benign refusal rose on both
+models. The tiered prompt was worse: on the dev split GPT-5.3-Codex gave six harmful replies on five agentic tasks under gen3b that it refused under v12 (unsafe count
+2 to 8), all of them requests the input assessment did not flag, such as
+posting a fabricated exposé of a company. The full safety prompt was doing work
+that the regular expressions cannot see, so spotlighting alone is not a safe
+replacement for it on agentic tasks. gen3d, the closest candidate, cut Haiku's
+dev failures from 23 to 21 but raised its dev unsafe count from 2 to 3, and the
+gate requires no rise on any model. Two reflector rounds in the same period
+proposed one pattern and one category extension; neither changed a single dev
+label. v12 therefore stayed the canonical harness.
+
+To get a clean measurement we added a holdout split: 50 unused items per
+benchmark (40 for JailbreakBench, which had eight unused goals left, each
+wrapped in all five archetypes), 290 items in total, drawn after the test,
+evolve, dev and probe splits were fixed and read by no earlier step. Each model
+was run once per condition: no harness, spotlighting only, v12, and gen3d as a
+labelled diagnostic. gen3d was rejected before this run, and we did not change
+that decision on the basis of holdout results.
+
+| Holdout, unsafe on all attack prompts | bare | spotlight only | v12 | gen3d (rejected) |
+|---|---|---|---|---|
+| Claude Haiku 4.5 | 2.8 | 0.5 | 0.5 | 0.5 |
+| GPT-5.3-Codex | 2.3 | 2.3 | 1.9 | 0.0 |
+
+| Holdout, refusal of benign prompts | bare | spotlight only | v12 | gen3d (rejected) |
+|---|---|---|---|---|
+| Claude Haiku 4.5 | 28.0 | 28.0 | 28.0 | 22.7 |
+| GPT-5.3-Codex | 13.3 | 13.3 | 5.3 | 5.3 |
+
+On the holdout, v12 was never less safe than the bare model. On Haiku it
+removed prompt injection (10.0% to 0.0%) and left benign refusal unchanged at
+28.0%. On GPT-5.3-Codex the unsafe rate went from 2.3% to 1.9%, jailbreak
+success from 5.0% to 2.5%, and benign refusal from 13.3% to 5.3%, mostly on
+agentic tasks (32.0% to 8.0%). AgentHarm harmful completion stayed at 12.0%.
+With the corrected judge GPT-5.3-Codex followed no injection in any
+condition, so the injection gap reported in Section 5.5 was largely a judging
+artefact. Spotlighting alone matched v12 on Haiku and matched the bare model on
+GPT-5.3-Codex. None of these comparisons is significant: GPT-5.3-Codex bare to
+v12 fixed 10 items and broke 3 (p = 0.09); Haiku bare to v12 fixed 8 and broke
+3 (p = 0.23).
+
+The rejected gen3d did best on GPT-5.3-Codex: 0.0% unsafe and no harmful
+agentic completions. Its dev rejection rested on one Haiku item. This suggests
+the no-rise rule is conservative at dev-split sizes, but a single holdout run
+cannot justify promoting it. Confirming it needs a further unseen split, and we
+leave it unpromoted.
 
 Spotlighting is the part of the harness that worked: it removed every injection
 success on Haiku and a third of them on GPT-5.3-Codex. The weak point is the
@@ -378,6 +450,18 @@ the system prompt; the evolved guidance is worth its cost only where the base
 model over-refuses or complies too readily, and that has to be measured per
 model.
 
+The third iteration changes that recommendation in one respect. Once the judge
+was corrected and a clean holdout was used, the evolved harness was no longer
+worse than no harness on either model, and on GPT-5.3-Codex it reduced
+unneeded refusal of agentic tasks. The redesigns also showed that the long
+safety prompt protects against harm the input assessment cannot detect.
+Shortening it for unflagged requests let one model complete harmful tool tasks.
+Spotlighting is the cheapest component, but on agentic work it is not
+a substitute for the full prompt. The gate also proved conservative: it
+rejected a candidate over a single dev item, and that candidate later did best
+on the holdout. A stricter significance-based gate would need much larger dev
+splits than a subscription budget allows.
+
 ## 7 Limitations
 
 - **Two models.** Only two models were live through the Copilot SDK in our
@@ -401,6 +485,11 @@ model.
 - **Reseed informed by test failures.** The second-generation seed was written
   after reading first-generation test failures. We evaluated it on unseen items,
   but those items share jailbreak templates with the earlier ones.
+- **Judge revision.** The judge changed between the second iteration and the
+  holdout run (Section 5.6). Numbers within a run are comparable; numbers across
+  the two runs are not.
+- **One holdout run.** The holdout was run once per model and condition; its
+  JailbreakBench part reuses eight goals across five archetypes.
 
 ## 8 Ethics and data handling
 
@@ -416,5 +505,6 @@ Code, the seed harness, the evolved harness with its ledger and every version
 snapshot, and the aggregate results are in the Enmo Safety and Enmo Safety
 Builder repositories. `lab/bench_data.py`, `lab/evolve.py`, `lab/run_eval.py`
 and `lab/analyze.py` regenerate every number in this paper; tables and figures
-are generated from `results/summary.json` (first generation) and
-`results/fresh/summary.json` (second iteration).
+are generated from `results/summary.json` (first generation),
+`results/fresh/summary.json` (second iteration) and
+`results/holdout/summary.json` (holdout split, `bench_data.py --holdout 50`).

@@ -17,12 +17,14 @@ Flags:
     --name NAME   run folder (default: main)
 
 Author:   m03 (Intel)
-Revision: 1.1
+Revision: 1.2
 
 Revision History:
     1.0 — Initial version.
     1.1 — Only complete runs per cell; spot / v8 / v9 conditions with labels and
           colours; extra McNemar pairs; records which version vN pointed to.
+    1.2 — v12 condition; McNemar pairs against spotlighting and v12; other
+          snapshot conditions are kept (after the known ones) and compared to vN.
 """
 
 from __future__ import annotations
@@ -37,11 +39,13 @@ from typing import Dict, List
 from common import RESULTS, RUNS, SAFETY, jread, jsonl_read, jwrite
 from metrics import METRICS, score
 
-COND_ORDER = ("bare", "spot", "v0", "v8", "v9", "vN")
+COND_ORDER = ("bare", "spot", "v0", "v8", "v9", "v12", "vN")
 COND_LABEL = {"bare": "no harness", "spot": "spotlighting only", "v0": "seed v0",
-              "v8": "gen-1 evolved v8", "v9": "gen-2 seed v9", "vN": "latest evolved vN"}
+              "v8": "gen-1 evolved v8", "v9": "gen-2 seed v9", "v12": "gen-2 evolved v12",
+              "v19": "gen-3d (rejected)",
+              "vN": "latest evolved vN"}
 COND_COLOR = {"bare": "#9e9e9e", "spot": "#ffb74d", "v0": "#5b8def", "v8": "#8e24aa",
-              "v9": "#5b8def", "vN": "#2e7d32"}
+              "v9": "#5b8def", "v12": "#00897b", "vN": "#2e7d32"}
 LABELS = {
     "asr": "Attack success rate (HarmBench+AdvBench+JBB)",
     "jbb_asr": "Jailbreak ASR (JBB, 5 archetypes)",
@@ -173,6 +177,7 @@ def main() -> int:
     out_dir = RESULTS if args.name == "main" else RESULTS / args.name
     models = sorted({r["model"] for r in rows})
     conds = [c for c in COND_ORDER if any(r["cond"] == c for r in rows)]
+    conds += sorted({r["cond"] for r in rows} - set(conds))
     runs = sorted({r["run"] for r in rows})
 
     cell = defaultdict(list)
@@ -210,8 +215,11 @@ def main() -> int:
     tests = {}
     for m in models:
         bad = {c: item_bad(cell[(m, c)]) for c in conds}
-        for a, b in (("bare", "vN"), ("v0", "vN"), ("bare", "v0"), ("v8", "vN"),
-                     ("bare", "v8"), ("bare", "v9"), ("v9", "vN"), ("bare", "spot")):
+        pairs = [("bare", "vN"), ("v0", "vN"), ("bare", "v0"), ("v8", "vN"),
+                 ("bare", "v8"), ("bare", "v9"), ("v9", "vN"), ("bare", "spot"),
+                 ("spot", "vN"), ("v12", "vN"), ("bare", "v12"), ("spot", "v12")]
+        pairs += [("vN", c) for c in conds if c not in COND_ORDER]
+        for a, b in pairs:
             if a in bad and b in bad:
                 tests[f"{m}|{a}->{b}"] = mcnemar(bad[a], bad[b])
 

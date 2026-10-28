@@ -19,15 +19,21 @@ Sources (see ../sources.json "datasets"):
 
 Flags:
     --test N --evolve N --dev N --seed S
+    --holdout N   append a holdout split (N items per benchmark) to the existing
+                  benchmarks.json from items no other split uses; existing splits
+                  are left byte-identical. JBB holdout wraps each unused goal in
+                  all five archetypes.
 
 Author:   m03 (Intel)
-Revision: 1.1
+Revision: 1.2
 
 Revision History:
     1.0 — Initial version: HF datasets-server + CSV loaders, jailbreak archetype
           wrapping with held-out archetypes, stratified disjoint splits.
     1.1 — probe split: up to 8 misinformation / expert-advice items per benchmark
           drawn from items no other split uses (seen archetypes only).
+    1.2 — --holdout: a fresh split for evaluating changes informed by test-split
+          failures.
 """
 
 from __future__ import annotations
@@ -44,12 +50,17 @@ import urllib.parse
 import urllib.request
 from collections import defaultdict
 
-from common import DATA, jwrite
+from common import DATA, jread, jwrite
 
 HF_ROWS = "https://datasets-server.huggingface.co/rows"
 CSV = {
     "harmbench": "https://raw.githubusercontent.com/centerforaisafety/HarmBench/main/data/behavior_datasets/harmbench_behaviors_text_all.csv",
     "advbench": "https://raw.githubusercontent.com/llm-attacks/llm-attacks/main/data/advbench/harmful_behaviors.csv",
+}
+# Same files in the builder's clones (builder.py --clone); used when the CSV URL is unreachable.
+LOCAL_CSV = {
+    "harmbench": DATA.parent.parent / "sources" / "HarmBench" / "data" / "behavior_datasets" / "harmbench_behaviors_text_all.csv",
+    "advbench": DATA.parent.parent / "sources" / "llm-attacks" / "data" / "advbench" / "harmful_behaviors.csv",
 }
 
 # Public jailbreak archetypes (Wei et al. 2023 "Jailbroken"; Shen et al. 2023 "Do Anything Now").
@@ -105,9 +116,16 @@ def hf_rows(dataset: str, config: str, split: str) -> list:
             return rows
 
 
-def csv_rows(url: str) -> list:
-    with urllib.request.urlopen(url, timeout=90) as r:
-        return list(csv.DictReader(io.StringIO(r.read().decode("utf-8"))))
+def csv_rows(name: str) -> list:
+    try:
+        with urllib.request.urlopen(CSV[name], timeout=90) as r:
+            text = r.read().decode("utf-8")
+    except (urllib.error.URLError, TimeoutError):
+        if not LOCAL_CSV[name].is_file():
+            raise
+        print(f"  {name}: CSV URL unreachable, reading {LOCAL_CSV[name].name} from the local clone")
+        text = LOCAL_CSV[name].read_text(encoding="utf-8")
+    return list(csv.DictReader(io.StringIO(text)))
 
 
 def lc_goal(goal: str) -> str:
@@ -118,11 +136,11 @@ def lc_goal(goal: str) -> str:
 def load_all() -> dict:
     items = defaultdict(list)
 
-    for r in csv_rows(CSV["harmbench"]):
+    for r in csv_rows("harmbench"):
         if r.get("FunctionalCategory") == "standard":
             items["harmbench"].append({"id": f"hb-{r['BehaviorID']}", "kind": "harmful",
                                        "category": r.get("SemanticCategory", ""), "prompt": r["Behavior"]})
-    for i, r in enumerate(csv_rows(CSV["advbench"])):
+    for i, r in enumerate(csv_rows("advbench")):
         items["advbench"].append({"id": f"adv-{i}", "kind": "harmful", "category": "advbench",
                                   "prompt": r["goal"]})
     for r in hf_rows("JailbreakBench/JBB-Behaviors", "behaviors", "harmful"):
@@ -208,14 +226,55 @@ def split(items: dict, n_test: int, n_evolve: int, n_dev: int, seed: int) -> dic
     return out
 
 
+def base_id(r: dict) -> str:
+    return r["id"].split("-" + r["template"])[0] if r.get("template") else r["id"]
+
+
+def add_holdout(n: int) -> dict:
+    data = jread(DATA / "benchmarks.json")
+    if data is None:
+        raise SystemExit("run bench_data.py first")
+    items = load_all()
+    for bench, d in data["benchmarks"].items():
+        used = {base_id(r) for s in ("test", "evolve", "dev", "probe") for r in d.get(s, [])}
+        pool_ids = {r["id"] for r in items[bench]}
+        if not used <= pool_ids:
+            raise SystemExit(f"{bench}: the downloaded pool no longer contains every used item")
+        rows = [r for r in items[bench] if r["id"] not in used]
+        rng = random.Random(f"{data['seed']}-{bench}-holdout")
+        if bench == "agentharm":
+            parts = {k: stratified([r for r in rows if r["kind"] == k], rng)
+                     for k in ("agentic_harmful", "agentic_benign")}
+            ordered = [r for pair in zip(parts["agentic_harmful"], parts["agentic_benign"]) for r in pair]
+        else:
+            ordered = stratified(rows, rng)
+        if bench == "jbb":
+            hold = [wrap_jbb(r, t) for r in ordered[:max(1, n // len(JB_TEMPLATES))] for t in JB_TEMPLATES]
+        else:
+            hold = ordered[:n]
+        for r in hold:
+            r["bench"] = bench
+            r["split"] = "holdout"
+        d["holdout"] = hold
+    data["sizes"]["holdout"] = n
+    jwrite(DATA / "benchmarks.json", data)
+    return data
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Download and split safety benchmarks")
     ap.add_argument("--test", type=int, default=50)
     ap.add_argument("--evolve", type=int, default=20)
     ap.add_argument("--dev", type=int, default=20)
     ap.add_argument("--seed", type=int, default=20261027)
+    ap.add_argument("--holdout", type=int, default=0)
     args = ap.parse_args()
 
+    if args.holdout:
+        data = add_holdout(args.holdout)
+        for b, d in data["benchmarks"].items():
+            print(f"{b:<10} holdout {len(d['holdout']):>3}")
+        return 0
     items = load_all()
     for b, rows in items.items():
         ids = [r["id"] for r in rows]
