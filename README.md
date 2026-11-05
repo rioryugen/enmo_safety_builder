@@ -27,17 +27,23 @@ enmo_safety_builder/
     release.py          per-version tags and releases
   integrations/
     humanizer/          git clone (MIT), restored with builder.py --clone humanizer
+    ecc/                git clone (MIT), restored with builder.py --clone ecc
   lab/
     bench_data.py       download + seeded, stratified, disjoint splits
     copilot_bridge.mjs  Copilot SDK bridge (model discovery + chat)
     providers.py        Copilot SDK + Octagram clients, response cache
     judge.py            heuristic + cross-model LLM judge, audit sample
+    baselines.py        public detector baselines (ProtectAI DeBERTa, Rebuff, Vigil) on the test split
+    pairing.py          per-item pairing of harness activation with judged outcomes for a run
+    variants.py         loads candidates/<name> harnesses (prototype area; winners are promoted to enmo_safety)
+    make_candidates.py  rebuilds the v22 candidates from the v21 snapshot
     evolve.py           self-evolution loop (evolve/dev splits only)
     run_eval.py         bare / v0 / vN matrix on the held-out test split
     metrics.py          metric definitions
     analyze.py          mean ± std, bootstrap CIs, McNemar, kappa, SVG figures
   results/              summary.json, tables.md, fig_*.svg (committed aggregates)
-  paper/                paper.md, paper.tex, refs.bib, generated tables
+  paper/                paper.md, paper.tex, refs.bib, generated tables; trigger_audit.py, fold_audit.py,
+                        outcome_figures.py (results/figures/fig_*.png), md2pdf.py
 ```
 
 ## Pipeline
@@ -61,6 +67,7 @@ run resumes where it stopped.
 | --- | --- | --- | --- |
 | enmo | git | — | parent harness, cloned with `clone_from_enmo.py` |
 | humanizer | git → `integrations/` | MIT | paper prose pass (`safety-paper-humanize`) |
+| ecc | git → `integrations/` | MIT | paper research/verification skills (deep-research, literature-review, scholar-evaluation, article-writing, verification-loop) |
 | HarmBench | git + CSV | MIT | harmful-behaviour prompts |
 | llm-attacks | git + CSV | MIT | AdvBench harmful behaviours |
 | jailbreakbench | git + HF | MIT | JBB-Behaviors goals |
@@ -75,7 +82,9 @@ API (`HF_TOKEN` is used if set, never stored).
 ## Models
 
 Models are discovered live through the GitHub Copilot SDK (`listModels`, then a
-ping). Octagram Swift 1.5 (local, OpenAI-compatible) is added when
+ping). The SDK is installed locally with `npm install @github/copilot-sdk`
+inside `lab/` (gitignored) and drives the installed Copilot CLI; the bridge
+also honours `COPILOT_SDK_PATH`. Octagram Swift 1.5 (local, OpenAI-compatible) is added when
 `OCTAGRAM_API_KEY` is set in the environment or the Windows user environment.
 The GitHub Models REST API is not used: on this network a proxy answers every
 request with a constant `OK`.
@@ -136,8 +145,32 @@ Full append-only history: `benchmarks.json`.
 `paper/paper.md` (readable) and `paper/paper.tex` (arXiv style). Tables and
 every quoted number are generated from `results/summary.json`.
 
+Follow-up drafts: [`paper/enmo_safety_v0.1.md`](paper/enmo_safety_v0.1.md),
+[`paper/trigger_coverage_v0.1.md`](paper/trigger_coverage_v0.1.md),
+[`paper/enmo_safety_cross_model.md`](paper/enmo_safety_cross_model.md), and
+[`paper/trigger_coverage_audit.md`](paper/trigger_coverage_audit.md). The v0.1
+drafts apply the Humanizer 3.1.0 prose pass; the trigger-coverage v0.1 was
+researched with the ECC literature-review and scholar-evaluation skills and
+its numbers come from `python paper/trigger_audit.py` (static rule activation
+on every split and every harness version, dead-rule census, surface-transform
+robustness, ledger join; no model calls; writes
+`results/trigger_audit/v<N>/summary.json`; `paper/trigger_figures.py` draws the
+figures; tests in `tests/test_trigger_audit.py`). `python lab/baselines.py`
+(rule-based) and `python lab/baselines.py --models` (Hugging Face classifiers)
+benchmark public detectors on the same items into `results/baselines/`; the
+Tavily search log behind the related-work section is
+`results/baselines/search_log.json`. Harness v20 and v21 were applied through
+`safety_evolve.py` from dev/probe evidence only and are ledgered as
+`applied_offline`: the model gate has not run on them.
+`python paper/check_numbers.py <draft.md>` verifies any draft's percentages
+against the results files. `python paper/md2pdf.py paper/<draft>.md` renders a
+draft to PDF through headless Edge/Chrome (no TeX needed; PDFs are gitignored
+build output). Neither draft reports a new inference run.
+
 ## Version history
 
 | Version | Date | Change |
 | --- | --- | --- |
 | 0.1.0 | 2026-10-27 | Builder cloned from enmo_builder; safety sources, lab, results, paper |
+| 0.2.0 | 2026-11-04 | Trigger-coverage audit, public detector baselines, Copilot CLI provider via local SDK install, `cli_test` and `open_weight_test` runs (3 + 3 models x 4 conditions x 300 items) with per-item pairing, `local:` provider for open-weight models behind an OpenAI-compatible endpoint (`LOCAL_LLM_URL`, `LOCAL_LLM_API_KEY`; no default URL), harness v20/v21 applied offline, two v0.1 paper drafts with PDFs |
+| 0.3.0 | 2026-11-05 | Candidate mechanism (`candidates/`, `lab/variants.py`, `lab/make_candidates.py`, `run_eval --transform`), clause ablation and obfuscated-attack runs (`v22_test`, `v22_leet`), `paper/fold_audit.py`; winning candidate promoted to `enmo_safety` as the gen4 seed (harness v22: calibrated clause + `variant.normalize`) |

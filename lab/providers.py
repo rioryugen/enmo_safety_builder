@@ -13,7 +13,7 @@ re-analysis and resumed runs never re-bill a call. Different `run` values are
 independent samples.
 
 Author:   m03 (Intel)
-Revision: 1.2
+Revision: 1.3
 
 Revision History:
     1.0 — Initial version: Copilot SDK bridge pool, Octagram client, retries,
@@ -22,6 +22,10 @@ Revision History:
           platform blocks, not retried; retries are logged; bridges run from the
           lab state dir outside git and synced folders.
     1.2 — Optional requests-per-minute cap (rpm) shared by all workers.
+    1.3 — local:<model> vendor (any OpenAI-compatible endpoint serving open-weight models; URL from
+          LOCAL_LLM_URL, api-key header from LOCAL_LLM_API_KEY); Octagram and the local endpoint share
+          one OpenAI-compatible client with HTTP
+          error detail and content-filter detection.
 """
 
 from __future__ import annotations
@@ -42,6 +46,8 @@ from common import CACHE, LAB, RUNS, STATE, jread, jwrite, sha
 
 OCTAGRAM_URL = os.environ.get("OCTAGRAM_URL", "http://10.138.143.62:8080/v1")
 OCTAGRAM_MODEL = "swift-1.5-iq2_xs"
+LOCAL_URL = os.environ.get("LOCAL_LLM_URL", "")  # no default: set it to your OpenAI-compatible endpoint
+LOCAL_MODELS = ("qwen3.8-27B", "glm-5.3-flash", "gemma4-31b")  # open-weight models; key from LOCAL_LLM_API_KEY only
 
 
 class PlatformBlock(RuntimeError):
@@ -99,7 +105,7 @@ class Providers:
         self._pool: "queue.Queue[Bridge]" = queue.Queue()
         self._made = 0
         self._lock = threading.Lock()
-        self.calls = {"copilot": 0, "octagram": 0, "cached": 0}
+        self.calls = {"copilot": 0, "octagram": 0, "local": 0, "cached": 0}
 
     # ---------- discovery ----------
     def live_models(self) -> List[str]:
@@ -114,6 +120,8 @@ class Providers:
         live = [m for m in models if self._ping(m)]
         if octagram_key() and self._ping(f"octagram:{OCTAGRAM_MODEL}"):
             live.append(f"octagram:{OCTAGRAM_MODEL}")
+        if LOCAL_URL and os.environ.get("LOCAL_LLM_API_KEY"):
+            live += [f"local:{m}" for m in LOCAL_MODELS if self._ping(f"local:{m}")]
         return live
 
     def _ping(self, model: str) -> bool:
@@ -147,6 +155,8 @@ class Providers:
                 self.calls["cached"] += 1
             return {**hit, "cached": True}
         vendor, mid = model.split(":", 1)
+        if vendor == "local" and not LOCAL_URL:
+            raise RuntimeError("set LOCAL_LLM_URL to an OpenAI-compatible endpoint for local:<model>")
         last = None
         for attempt in range(4):
             self._throttle()
@@ -155,6 +165,16 @@ class Providers:
                     res = self._copilot(mid, system, user, timeout_ms)
                 elif vendor == "octagram":
                     res = self._octagram(mid, system, user, timeout_ms)
+                elif vendor == "local":
+                    # Qwen3 otherwise spends the budget inside <think> and returns empty content, which the
+                    # judge would read as a refusal. GLM already separates reasoning into its own field and
+                    # reasons inline if the switch is set, so it keeps the default.
+                    extra: Dict = {"max_tokens": 2048}
+                    if "qwen" in mid.lower():
+                        extra["chat_template_kwargs"] = {"enable_thinking": False}
+                    res = self._openai_compatible(f"{LOCAL_URL}/chat/completions",
+                                                  {"api-key": os.environ.get("LOCAL_LLM_API_KEY", "")},
+                                                  mid, system, user, timeout_ms, extra=extra)
                 else:
                     raise ValueError(f"unknown vendor {vendor}")
                 break
@@ -206,15 +226,29 @@ class Providers:
         key = octagram_key()
         if not key:
             raise RuntimeError("OCTAGRAM_API_KEY not set")
+        return self._openai_compatible(f"{OCTAGRAM_URL}/chat/completions", {"Authorization": "Bearer " + key},
+                                       mid, system, user, timeout_ms)
+
+    def _openai_compatible(self, url: str, auth: Dict[str, str], mid: str, system: str, user: str,
+                           timeout_ms: int, extra: Optional[Dict] = None) -> Dict:
+        """One chat completion against an OpenAI-compatible endpoint (Octagram, local open-weight models)."""
+        if not any(auth.values()):
+            raise RuntimeError("no API key for " + url)
         body = json.dumps({"model": mid, "max_tokens": 1024,
                            "messages": [{"role": "system", "content": system},
-                                        {"role": "user", "content": user}]}).encode("utf-8")
-        req = urllib.request.Request(f"{OCTAGRAM_URL}/chat/completions", data=body, headers={
-            "Content-Type": "application/json", "Authorization": f"Bearer {key}"})
+                                        {"role": "user", "content": user}]} | (extra or {})).encode("utf-8")
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json", **auth})
         opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
         t0 = time.time()
-        with opener.open(req, timeout=timeout_ms / 1000) as r:
-            data = json.loads(r.read().decode("utf-8"))
+        try:
+            with opener.open(req, timeout=timeout_ms / 1000) as r:
+                data = json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", "replace")[:300]
+            low = detail.lower()
+            if exc.code in (400, 422) and "content" in low and ("filter" in low or "policy" in low):
+                raise PlatformBlock(detail) from exc
+            raise RuntimeError(f"HTTP {exc.code}: {detail}") from exc
         text = data["choices"][0]["message"].get("content") or ""
         text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()
         return {"text": text, "latency_ms": int((time.time() - t0) * 1000)}

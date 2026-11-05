@@ -28,3 +28,7 @@ paper/*.out
 paper/*.bbl
 paper/*.blg
 paper/*.pdf
+
+# Lab: local Copilot SDK install
+lab/node_modules/
+lab/package-lock.json

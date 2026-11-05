@@ -5,20 +5,24 @@
 //         message and no tools, so the model sees exactly the harness prompt.
 //   1.1 — sessions are tagged clientName=enmo-safety-lab and deleted after each
 //         request: benchmark prompts are not persisted and the store stays small.
+//   1.2 — finds a lab-local `npm install @github/copilot-sdk`; disconnect() replaces destroy().
 //
 // Usage:
 //   node copilot_bridge.mjs --list
 //   node copilot_bridge.mjs --serve   (stdin: one JSON request per line; stdout: one JSON reply per line)
 //   request: {"id": "...", "model": "gpt-4.1", "system": "...", "prompt": "...", "timeout_ms": 120000}
 
-import { pathToFileURL } from "node:url";
+import { pathToFileURL, fileURLToPath } from "node:url";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
 import { existsSync, readdirSync } from "node:fs";
 import readline from "node:readline";
 
 function sdkPath() {
   if (process.env.COPILOT_SDK_PATH) return process.env.COPILOT_SDK_PATH;
+  // Local install: npm install @github/copilot-sdk inside lab/ (drives the installed Copilot CLI).
+  const local = join(dirname(fileURLToPath(import.meta.url)), "node_modules", "@github", "copilot-sdk", "dist", "index.js");
+  if (existsSync(local)) return local;
   const base = join(homedir(), ".copilot", "pkg", "universal");
   const versions = existsSync(base) ? readdirSync(base).sort() : [];
   for (const v of versions.reverse()) {
@@ -48,7 +52,8 @@ async function chat(req) {
     return { id: req.id, ok: true, text: ev?.data?.content ?? "", latency_ms: Date.now() - t0 };
   } finally {
     const sid = session.sessionId;
-    await session.destroy().catch(() => {});
+    // SDK >= 1.0.28 renamed destroy() to disconnect(); support both.
+    await (session.disconnect ?? session.destroy)?.call(session).catch(() => {});
     if (sid) await client.deleteSession(sid).catch(() => {});
   }
 }

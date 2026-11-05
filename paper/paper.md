@@ -1,6 +1,10 @@
-# Enmo Safety: A Bounded, Self-Evolving Safety Harness for Off-the-Shelf Language Models
+# Enmo Safety: External, Non-invasive, Model-agnostic Oversight for Off-the-Shelf Language Models
 
-m03 (Intel), October 2026
+*A bounded, self-evolving safety harness, evaluated on six open benchmarks and six policy models*
+
+Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K S (sarun.kumar.k.s@intel.com), and Allan Kevin T (allan.kevin.t@intel.com), Intel Corporation
+
+Version 2 draft, 5 November 2026. Code, harness, version snapshots and ledger: [github.com/rioryugen/enmo_safety](https://github.com/rioryugen/enmo_safety).
 
 ## Abstract
 
@@ -31,7 +35,16 @@ reviewed redesigns; the per-model dev gate rejected all four. On 290 holdout
 items that no earlier step had touched, the unchanged v12 harness was at least
 as safe as no harness on both models (unsafe 2.8% to 0.5% on Haiku, 2.3% to
 1.9% on GPT-5.3-Codex) and cut GPT-5.3-Codex's benign refusal from 13.3% to
-5.3%, but none of these differences reached significance (smallest p = 0.09).
+5.3%, but none of these differences reached significance (smallest p = 0.09). A fourth iteration ran six policy
+models (three through the Copilot CLI, three open-weight models) on a fresh 300-item
+split: the harness cut the unsafe rate significantly on the two weakest models
+(12.9% to 7.1%, p = 0.035; 10.2% to 3.6%, p = 0.036), not on the other four,
+and raised agentic-harm labels on two. Activation of the harness's rules was
+unrelated to outcome (Fisher p from 0.30 to 1.0), and its helpfulness clauses
+made agentic harm worse than no harness on obfuscated attacks, because
+evading the keyword screen bought extra permission. A reworded clause and an
+input-normalisation step form harness v22, at a measured cost in benign
+tool-task refusal.
 
 ## 1 Introduction
 
@@ -409,6 +422,98 @@ the no-rise rule is conservative at dev-split sizes, but a single holdout run
 cannot justify promoting it. Confirming it needs a further unseen split, and we
 leave it unpromoted.
 
+### 5.7 Fourth iteration: six models, public detectors, and the agentic regression
+
+The earlier sections ran two frontier models. We then ran a fresh 300-item test
+split of the same six benchmarks through six policy models: Claude Haiku 4.5,
+Claude Haiku 5.5 and MAI Code 1.1 Flash through the Copilot CLI, and Qwen3.8
+27B, GLM-5.3 Flash and Gemma 4 31B, which have open weights. Conditions were bare,
+spotlighting only, v12, and v21 (v12 plus two jailbreak patterns, Section 5.11
+of the companion paper); judges were GPT-5.6 Sol and Claude Sonnet 5, never the
+model under test. One run per cell, 7,200 judged replies, no platform blocks.
+
+| Unsafe rate, all attack prompts | bare | spotlight only | v12 | bare to v12, exact p |
+|---|---:|---:|---:|---:|
+| Claude Haiku 4.5 | 4.0 | 1.8 | 0.9 | 0.210 |
+| Claude Haiku 5.5 | 5.3 | 4.0 | 4.4 | 0.238 |
+| MAI Code 1.1 Flash | 12.9 | 11.6 | 7.1 | 0.035 |
+| Qwen3.8 27B | 4.9 | 4.0 | 3.6 | 1.000 |
+| GLM-5.3 Flash | 4.0 | 2.7 | 4.9 | 0.648 |
+| Gemma 4 31B | 10.2 | 9.8 | 3.6 | 0.036 |
+
+![models](../results/figures/fig_models.png)
+
+*Figure 1. Unsafe rate on the 225 attack items for six policy models under no harness, spotlighting only, and v12. Whiskers are 95% bootstrap intervals; * marks a significant bare-to-v12 paired difference (exact McNemar p < 0.05: MAI Code 1.1 Flash p = 0.035, Gemma 4 31B p = 0.036). One run per cell.*
+
+
+This answers the question the earlier iterations left open. The harness helps
+most where the base model is weakest: the two models with the highest bare
+unsafe rates, MAI Code 1.1 Flash and Gemma 4 31B, are the two with a
+significant reduction. The four stronger models show no significant change,
+and GLM-5.3 Flash moves the wrong way. Spotlighting alone removed every
+injected label on all six models. With two significant results among eighteen
+uncorrected paired tests, the pattern across models matters more than either
+p-value.
+
+Pairing each item's activation flag with its judged outcome, which the
+earlier iterations could not do because they kept only aggregates, shows that
+the deterministic rules do not select the items the model would otherwise
+fail on. Within every harness condition, attack items the rules flagged were
+not handled more safely than items they missed (Fisher exact p from 0.30 to
+1.0 across twelve model-condition cells). The harness's benefit over bare
+therefore arrives through the prompt and the spotlighting, not through the
+pattern match. A static audit of the rules (the follow-up paper) found that
+they flag 38.7% of attack items and 5.3% of benign items, that 16 of 34
+patterns never fire on any split, and that three trivial obfuscations
+(leetspeak, homoglyphs, a zero-width space) cut attack activation to 0.4%.
+Against publicly available detectors on the same items, the rules flag more
+attack items than ProtectAI's DeBERTa prompt-injection classifier (38.7% against
+19.1%) and are the only detector tested that covers harmful requests rather than
+injections, but the classifier is better on injection documents (36.0% against
+14.0%) with no false positives; the open-source Rebuff and Vigil rule sets flag
+nothing on this split.
+
+![pairing](../results/figures/fig_pairing.png)
+
+*Figure 2. Unsafe rate among attack items the rules flagged (red) and missed (blue), per model and harness version. No cell differs significantly (Fisher exact p from 0.30 to 1.0).*
+
+
+![detectors](../results/figures/fig_detectors.png)
+
+*Figure 3. Left: share of attack items flagged on plain text by Enmo v12, Enmo v22 and ProtectAI's DeBERTa prompt-injection classifier. Right: attack items (solid) and benign items (hatched) flagged after three obfuscations. Enmo v12 flags 0.4% of attack items under each transform; v22 restores 45.8% with no more benign flags than clean text; the classifier flags more attacks but also 29% to 53% of benign items.*
+
+
+The agentic regression has a mechanism. The helpfulness clauses v12 appends to
+every unflagged request tell the model that no harm signal was detected and to
+complete the task, yet the rules flag only 4 of 25 harmful AgentHarm tasks. On
+leetspeak-obfuscated attacks these clauses made agentic harm worse than no
+harness: 0.0% to 16.0% on Haiku 5.5 and 12.0% to 28.0% on MAI Code 1.1 Flash.
+Evading the screen bought extra permission. We tested removing the clauses
+and rewording them so they do not claim the request is safe, on four models.
+Neither changes the overall unsafe rate significantly (p from 0.15 to 1.0),
+and both raise refusal of benign tool tasks on every model, by 5 to 28 points:
+the clauses trade harmful compliance for benign helpfulness at roughly equal
+rates, which is the trade-off that sank the third-generation seed. The
+reworded clause nonetheless removes the evasion effect (16.0% to 0.0% and 28.0%
+to 8.0%), so we adopted it together with an input-normalisation step that
+folds look-alike characters, hidden characters and leetspeak before the
+rules run, as harness v22. Normalisation lifts attack activation under all
+three audit transforms from 0.4% to 45.8% with no added benign flags, but adds
+no measurable protection beyond the reworded clause. v22 is a reviewed
+reseed that was not run through the per-model gate, and rolling back to v21 is
+one command.
+
+![tradeoff](../results/figures/fig_tradeoff.png)
+
+*Figure 4. Effect of removing (solid arrow) or rewording (dashed arrow) the helpfulness clauses, starting from v21. Harmful tool-task completion falls on most models and benign tool-task refusal rises on all four.*
+
+
+![evasion](../results/figures/fig_evasion.png)
+
+*Figure 5. Harmful tool tasks completed on leetspeak-obfuscated attack items. v21's 'no signal detected' clause makes agentic harm worse than no harness (Haiku 5.5: 0% to 16%; MAI Code 1.1 Flash: 12% to 28%). The reworded clause (v22b) removes the effect; adding normalisation (v22c) changes nothing further.*
+
+## 6 Discussion
+
 Spotlighting is the part of the harness that worked: it removed every injection
 success on Haiku and a third of them on GPT-5.3-Codex. The weak point is the
 harness's own text. The base prompt and both evolved clauses tell the model not to
@@ -462,11 +567,28 @@ rejected a candidate over a single dev item, and that candidate later did best
 on the holdout. A stricter significance-based gate would need much larger dev
 splits than a subscription budget allows.
 
+The fourth iteration answers the earlier call for weaker and open-weight
+models, and the answer is conditional. Across six models the harness's effect
+over the bare model was significant on the two weakest, absent on three and
+adverse on agentic tasks for two, so the earlier advice stands in a sharper
+form: measure the bare model first, always spotlight untrusted content, and
+add the rest only where the base model's own unsafe rate leaves room. The
+paired analysis also removes a tempting reading of the earlier results. The
+benefit is not delivered through the deterministic rules: flagged and
+unflagged attack items are handled alike, and the rules disappear under trivial
+obfuscation. The rules are best understood as a router for guidance on
+plain text, and their activation should be reported next to outcome metrics.
+Finally, the helpfulness clauses are a genuine trade-off, not a defect with a
+free fix; resolving it needs a task-level signal stronger than a keyword
+screen.
+
 ## 7 Limitations
 
-- **Two models.** Only two models were live through the Copilot SDK in our
-  environment, and both are frontier models with strong built-in refusal.
-  GPT-5.3-Codex was run once per condition because of rate limits.
+- **Models.** The first three iterations ran two frontier models, both with
+  strong built-in refusal. The fourth ran six (Section 5.7), but one run per
+  cell, so only the largest paired effects are detectable, and the two
+  significant results are two of eighteen uncorrected tests. The Qwen and GLM
+  models were queried with different thinking settings.
 - **Small samples.** 25 test items per benchmark and three runs per condition
   keep the cost within a subscription budget, but the intervals are wide and
   small differences are not significant.
@@ -490,6 +612,14 @@ splits than a subscription budget allows.
   the two runs are not.
 - **One holdout run.** The holdout was run once per model and condition; its
   JailbreakBench part reuses eight goals across five archetypes.
+- **Fourth iteration.** The 300-item split of Section 5.7 reuses the five
+  jailbreak archetypes. The agentic-harm rates rest on 25 harmful and 25 benign
+  tool tasks per model, so one task moves a rate by four points. The
+  obfuscated-attack test used one transform on two models. The input
+  normalisation was extended once after its first results on two of the four
+  extra obfuscations, so those rows are not held out. v22 has not passed the
+  per-model gate, and the paired analysis is observational: flagged and
+  unflagged items differ in content as well as routing.
 
 ## 8 Ethics and data handling
 
@@ -508,3 +638,11 @@ and `lab/analyze.py` regenerate every number in this paper; tables and figures
 are generated from `results/summary.json` (first generation),
 `results/fresh/summary.json` (second iteration) and
 `results/holdout/summary.json` (holdout split, `bench_data.py --holdout 50`).
+The fourth iteration is in `results/cli_test`, `results/open_weight_test`,
+`results/v22_test` and `results/v22_leet` (`lab/run_eval.py`, `lab/analyze.py`,
+`lab/pairing.py`), the static audit in `results/trigger_audit` and
+`results/baselines` (`paper/trigger_audit.py`, `paper/fold_audit.py`,
+`lab/baselines.py`), and harness v22 in the Enmo Safety repository
+(`harness/seeds/gen4`, ledger entry 22). A longer treatment is in the
+companion paper, "Enmo Safety: External, Non-invasive, Model-agnostic
+Oversight for Language Models" (trigger-coverage audit).

@@ -1,0 +1,1550 @@
+{
+  "run": "baselines",
+  "split": "test",
+  "seed": 20261027,
+  "items": 300,
+  "harness_version": 22,
+  "table": {
+    "enmo_v12:advbench|attack": {
+      "flag": {
+        "mean": 0.54,
+        "pooled": 0.54,
+        "n_runs": 1,
+        "ci95": [
+          0.40398634328388083,
+          0.6703056539821737
+        ]
+      },
+      "_n": 50,
+      "_hits": 27
+    },
+    "enmo_v12:all|attack": {
+      "flag": {
+        "mean": 0.38666666666666666,
+        "pooled": 0.38666666666666666,
+        "n_runs": 1,
+        "ci95": [
+          0.325444039052452,
+          0.4516943833322892
+        ]
+      },
+      "_n": 225,
+      "_hits": 87
+    },
+    "enmo_v12:agentharm|attack": {
+      "flag": {
+        "mean": 0.16,
+        "pooled": 0.16,
+        "n_runs": 1,
+        "ci95": [
+          0.06403347608577989,
+          0.34654013980238163
+        ]
+      },
+      "_n": 25,
+      "_hits": 4
+    },
+    "enmo_v12:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "enmo_v12:all|benign": {
+      "flag": {
+        "mean": 0.05333333333333334,
+        "pooled": 0.05333333333333334,
+        "n_runs": 1,
+        "ci95": [
+          0.020933088960043124,
+          0.1292617320481556
+        ]
+      },
+      "_n": 75,
+      "_hits": 4
+    },
+    "enmo_v12:harmbench|attack": {
+      "flag": {
+        "mean": 0.4,
+        "pooled": 0.4,
+        "n_runs": 1,
+        "ci95": [
+          0.2760818978624575,
+          0.5381881089724063
+        ]
+      },
+      "_n": 50,
+      "_hits": 20
+    },
+    "enmo_v12:injection|attack": {
+      "flag": {
+        "mean": 0.14,
+        "pooled": 0.14,
+        "n_runs": 1,
+        "ci95": [
+          0.06950745262022862,
+          0.2618645719852809
+        ]
+      },
+      "_n": 50,
+      "_hits": 7
+    },
+    "enmo_v12:jbb|attack": {
+      "flag": {
+        "mean": 0.58,
+        "pooled": 0.58,
+        "n_runs": 1,
+        "ci95": [
+          0.4423319668777783,
+          0.7062520276543307
+        ]
+      },
+      "_n": 50,
+      "_hits": 29
+    },
+    "enmo_v12:xstest|benign": {
+      "flag": {
+        "mean": 0.08,
+        "pooled": 0.08,
+        "n_runs": 1,
+        "ci95": [
+          0.031549003255790686,
+          0.18838502545063704
+        ]
+      },
+      "_n": 50,
+      "_hits": 4
+    },
+    "enmo_v12:precision": {
+      "flag": {
+        "mean": 0.9560439560439561,
+        "pooled": 0.9560439560439561,
+        "n_runs": 1,
+        "ci95": [
+          0.8923674847182562,
+          0.9827759122720942
+        ]
+      },
+      "_n": 91,
+      "_hits": 87
+    },
+    "enmo_v12:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.0044444444444444444,
+        "pooled": 0.0044444444444444444,
+        "n_runs": 1,
+        "ci95": [
+          0.0007849646791219054,
+          0.024741862611021147
+        ]
+      },
+      "_n": 225,
+      "_hits": 1
+    },
+    "enmo_v12:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.0044444444444444444,
+        "pooled": 0.0044444444444444444,
+        "n_runs": 1,
+        "ci95": [
+          0.0007849646791219054,
+          0.024741862611021147
+        ]
+      },
+      "_n": 225,
+      "_hits": 1
+    },
+    "enmo_v12:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.0044444444444444444,
+        "pooled": 0.0044444444444444444,
+        "n_runs": 1,
+        "ci95": [
+          0.0007849646791219054,
+          0.024741862611021147
+        ]
+      },
+      "_n": 225,
+      "_hits": 1
+    },
+    "enmo_v12:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "enmo_v12:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "enmo_v12:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "enmo_v21:advbench|attack": {
+      "flag": {
+        "mean": 0.54,
+        "pooled": 0.54,
+        "n_runs": 1,
+        "ci95": [
+          0.40398634328388083,
+          0.6703056539821737
+        ]
+      },
+      "_n": 50,
+      "_hits": 27
+    },
+    "enmo_v21:all|attack": {
+      "flag": {
+        "mean": 0.4577777777777778,
+        "pooled": 0.4577777777777778,
+        "n_runs": 1,
+        "ci95": [
+          0.3939314370539081,
+          0.52304170069727
+        ]
+      },
+      "_n": 225,
+      "_hits": 103
+    },
+    "enmo_v21:agentharm|attack": {
+      "flag": {
+        "mean": 0.16,
+        "pooled": 0.16,
+        "n_runs": 1,
+        "ci95": [
+          0.06403347608577989,
+          0.34654013980238163
+        ]
+      },
+      "_n": 25,
+      "_hits": 4
+    },
+    "enmo_v21:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "enmo_v21:all|benign": {
+      "flag": {
+        "mean": 0.05333333333333334,
+        "pooled": 0.05333333333333334,
+        "n_runs": 1,
+        "ci95": [
+          0.020933088960043124,
+          0.1292617320481556
+        ]
+      },
+      "_n": 75,
+      "_hits": 4
+    },
+    "enmo_v21:harmbench|attack": {
+      "flag": {
+        "mean": 0.4,
+        "pooled": 0.4,
+        "n_runs": 1,
+        "ci95": [
+          0.2760818978624575,
+          0.5381881089724063
+        ]
+      },
+      "_n": 50,
+      "_hits": 20
+    },
+    "enmo_v21:injection|attack": {
+      "flag": {
+        "mean": 0.14,
+        "pooled": 0.14,
+        "n_runs": 1,
+        "ci95": [
+          0.06950745262022862,
+          0.2618645719852809
+        ]
+      },
+      "_n": 50,
+      "_hits": 7
+    },
+    "enmo_v21:jbb|attack": {
+      "flag": {
+        "mean": 0.9,
+        "pooled": 0.9,
+        "n_runs": 1,
+        "ci95": [
+          0.7863950966521162,
+          0.956524876008429
+        ]
+      },
+      "_n": 50,
+      "_hits": 45
+    },
+    "enmo_v21:xstest|benign": {
+      "flag": {
+        "mean": 0.08,
+        "pooled": 0.08,
+        "n_runs": 1,
+        "ci95": [
+          0.031549003255790686,
+          0.18838502545063704
+        ]
+      },
+      "_n": 50,
+      "_hits": 4
+    },
+    "enmo_v21:precision": {
+      "flag": {
+        "mean": 0.9626168224299065,
+        "pooled": 0.9626168224299065,
+        "n_runs": 1,
+        "ci95": [
+          0.9077981271048194,
+          0.9853683374716573
+        ]
+      },
+      "_n": 107,
+      "_hits": 103
+    },
+    "enmo_v21:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.0044444444444444444,
+        "pooled": 0.0044444444444444444,
+        "n_runs": 1,
+        "ci95": [
+          0.0007849646791219054,
+          0.024741862611021147
+        ]
+      },
+      "_n": 225,
+      "_hits": 1
+    },
+    "enmo_v21:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.0044444444444444444,
+        "pooled": 0.0044444444444444444,
+        "n_runs": 1,
+        "ci95": [
+          0.0007849646791219054,
+          0.024741862611021147
+        ]
+      },
+      "_n": 225,
+      "_hits": 1
+    },
+    "enmo_v21:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.0044444444444444444,
+        "pooled": 0.0044444444444444444,
+        "n_runs": 1,
+        "ci95": [
+          0.0007849646791219054,
+          0.024741862611021147
+        ]
+      },
+      "_n": 225,
+      "_hits": 1
+    },
+    "enmo_v21:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "enmo_v21:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "enmo_v21:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "enmo_v22:advbench|attack": {
+      "flag": {
+        "mean": 0.54,
+        "pooled": 0.54,
+        "n_runs": 1,
+        "ci95": [
+          0.40398634328388083,
+          0.6703056539821737
+        ]
+      },
+      "_n": 50,
+      "_hits": 27
+    },
+    "enmo_v22:all|attack": {
+      "flag": {
+        "mean": 0.4577777777777778,
+        "pooled": 0.4577777777777778,
+        "n_runs": 1,
+        "ci95": [
+          0.3939314370539081,
+          0.52304170069727
+        ]
+      },
+      "_n": 225,
+      "_hits": 103
+    },
+    "enmo_v22:agentharm|attack": {
+      "flag": {
+        "mean": 0.16,
+        "pooled": 0.16,
+        "n_runs": 1,
+        "ci95": [
+          0.06403347608577989,
+          0.34654013980238163
+        ]
+      },
+      "_n": 25,
+      "_hits": 4
+    },
+    "enmo_v22:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "enmo_v22:all|benign": {
+      "flag": {
+        "mean": 0.05333333333333334,
+        "pooled": 0.05333333333333334,
+        "n_runs": 1,
+        "ci95": [
+          0.020933088960043124,
+          0.1292617320481556
+        ]
+      },
+      "_n": 75,
+      "_hits": 4
+    },
+    "enmo_v22:harmbench|attack": {
+      "flag": {
+        "mean": 0.4,
+        "pooled": 0.4,
+        "n_runs": 1,
+        "ci95": [
+          0.2760818978624575,
+          0.5381881089724063
+        ]
+      },
+      "_n": 50,
+      "_hits": 20
+    },
+    "enmo_v22:injection|attack": {
+      "flag": {
+        "mean": 0.14,
+        "pooled": 0.14,
+        "n_runs": 1,
+        "ci95": [
+          0.06950745262022862,
+          0.2618645719852809
+        ]
+      },
+      "_n": 50,
+      "_hits": 7
+    },
+    "enmo_v22:jbb|attack": {
+      "flag": {
+        "mean": 0.9,
+        "pooled": 0.9,
+        "n_runs": 1,
+        "ci95": [
+          0.7863950966521162,
+          0.956524876008429
+        ]
+      },
+      "_n": 50,
+      "_hits": 45
+    },
+    "enmo_v22:xstest|benign": {
+      "flag": {
+        "mean": 0.08,
+        "pooled": 0.08,
+        "n_runs": 1,
+        "ci95": [
+          0.031549003255790686,
+          0.18838502545063704
+        ]
+      },
+      "_n": 50,
+      "_hits": 4
+    },
+    "enmo_v22:precision": {
+      "flag": {
+        "mean": 0.9626168224299065,
+        "pooled": 0.9626168224299065,
+        "n_runs": 1,
+        "ci95": [
+          0.9077981271048194,
+          0.9853683374716573
+        ]
+      },
+      "_n": 107,
+      "_hits": 103
+    },
+    "enmo_v22:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.4577777777777778,
+        "pooled": 0.4577777777777778,
+        "n_runs": 1,
+        "ci95": [
+          0.3939314370539081,
+          0.52304170069727
+        ]
+      },
+      "_n": 225,
+      "_hits": 103
+    },
+    "enmo_v22:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.4577777777777778,
+        "pooled": 0.4577777777777778,
+        "n_runs": 1,
+        "ci95": [
+          0.3939314370539081,
+          0.52304170069727
+        ]
+      },
+      "_n": 225,
+      "_hits": 103
+    },
+    "enmo_v22:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.4577777777777778,
+        "pooled": 0.4577777777777778,
+        "n_runs": 1,
+        "ci95": [
+          0.3939314370539081,
+          0.52304170069727
+        ]
+      },
+      "_n": 225,
+      "_hits": 103
+    },
+    "enmo_v22:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.04,
+        "pooled": 0.04,
+        "n_runs": 1,
+        "ci95": [
+          0.013695816001486477,
+          0.11113168623083756
+        ]
+      },
+      "_n": 75,
+      "_hits": 3
+    },
+    "enmo_v22:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.05333333333333334,
+        "pooled": 0.05333333333333334,
+        "n_runs": 1,
+        "ci95": [
+          0.020933088960043124,
+          0.1292617320481556
+        ]
+      },
+      "_n": 75,
+      "_hits": 4
+    },
+    "enmo_v22:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.05333333333333334,
+        "pooled": 0.05333333333333334,
+        "n_runs": 1,
+        "ci95": [
+          0.020933088960043124,
+          0.1292617320481556
+        ]
+      },
+      "_n": 75,
+      "_hits": 4
+    },
+    "protectai_base_v2:advbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "protectai_base_v2:all|attack": {
+      "flag": {
+        "mean": 0.19111111111111112,
+        "pooled": 0.19111111111111112,
+        "n_runs": 1,
+        "ci95": [
+          0.14509124991814493,
+          0.24750170520889492
+        ]
+      },
+      "_n": 225,
+      "_hits": 43
+    },
+    "protectai_base_v2:agentharm|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "protectai_base_v2:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "protectai_base_v2:all|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "protectai_base_v2:harmbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "protectai_base_v2:injection|attack": {
+      "flag": {
+        "mean": 0.36,
+        "pooled": 0.36,
+        "n_runs": 1,
+        "ci95": [
+          0.24138562967182875,
+          0.49859237989698046
+        ]
+      },
+      "_n": 50,
+      "_hits": 18
+    },
+    "protectai_base_v2:jbb|attack": {
+      "flag": {
+        "mean": 0.5,
+        "pooled": 0.5,
+        "n_runs": 1,
+        "ci95": [
+          0.36644286412332855,
+          0.6335571358766714
+        ]
+      },
+      "_n": 50,
+      "_hits": 25
+    },
+    "protectai_base_v2:xstest|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "protectai_base_v2:precision": {
+      "flag": {
+        "mean": 1.0,
+        "pooled": 1.0,
+        "n_runs": 1,
+        "ci95": [
+          0.9179874299767729,
+          1.0
+        ]
+      },
+      "_n": 43,
+      "_hits": 43
+    },
+    "protectai_base_v2:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.5911111111111111,
+        "pooled": 0.5911111111111111,
+        "n_runs": 1,
+        "ci95": [
+          0.5258652538232145,
+          0.6532979752400327
+        ]
+      },
+      "_n": 225,
+      "_hits": 133
+    },
+    "protectai_base_v2:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.72,
+        "pooled": 0.72,
+        "n_runs": 1,
+        "ci95": [
+          0.6580150548395245,
+          0.7745985958253896
+        ]
+      },
+      "_n": 225,
+      "_hits": 162
+    },
+    "protectai_base_v2:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.7511111111111111,
+        "pooled": 0.7511111111111111,
+        "n_runs": 1,
+        "ci95": [
+          0.6907172475524618,
+          0.8030740910852684
+        ]
+      },
+      "_n": 225,
+      "_hits": 169
+    },
+    "protectai_base_v2:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.5333333333333333,
+        "pooled": 0.5333333333333333,
+        "n_runs": 1,
+        "ci95": [
+          0.4215733915278032,
+          0.6418449054118834
+        ]
+      },
+      "_n": 75,
+      "_hits": 40
+    },
+    "protectai_base_v2:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.29333333333333333,
+        "pooled": 0.29333333333333333,
+        "n_runs": 1,
+        "ci95": [
+          0.2023999721815816,
+          0.4044065867923611
+        ]
+      },
+      "_n": 75,
+      "_hits": 22
+    },
+    "protectai_base_v2:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.38666666666666666,
+        "pooled": 0.38666666666666666,
+        "n_runs": 1,
+        "ci95": [
+          0.2845504777263397,
+          0.4998273126787256
+        ]
+      },
+      "_n": 75,
+      "_hits": 29
+    },
+    "rebuff_heuristic:advbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "rebuff_heuristic:all|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "rebuff_heuristic:agentharm|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "rebuff_heuristic:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "rebuff_heuristic:all|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "rebuff_heuristic:harmbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "rebuff_heuristic:injection|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "rebuff_heuristic:jbb|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "rebuff_heuristic:xstest|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "rebuff_heuristic:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "rebuff_heuristic:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "rebuff_heuristic:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "rebuff_heuristic:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "rebuff_heuristic:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "rebuff_heuristic:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara:advbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara:all|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara:agentharm|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "vigil_yara:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "vigil_yara:all|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara:harmbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara:injection|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara:jbb|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara:xstest|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:advbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:all|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:agentharm|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:agentharm|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.13319649395317873
+        ]
+      },
+      "_n": 25,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:all|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:harmbench|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:injection|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:jbb|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:xstest|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.07135003417431873
+        ]
+      },
+      "_n": 50,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:obf:leetspeak|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:obf:homoglyph|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:obf:zero_width|attack": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          1.734723475976807e-18,
+          0.016787157579740745
+        ]
+      },
+      "_n": 225,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:obf:leetspeak|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:obf:homoglyph|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    },
+    "vigil_yara_nocase:obf:zero_width|benign": {
+      "flag": {
+        "mean": 0.0,
+        "pooled": 0.0,
+        "n_runs": 1,
+        "ci95": [
+          0.0,
+          0.04872554590470005
+        ]
+      },
+      "_n": 75,
+      "_hits": 0
+    }
+  },
+  "_detectors": {
+    "enmo_v12": {
+      "precision": 0.9560439560439561,
+      "recall": 0.38666666666666666,
+      "f1": 0.5506329113924051,
+      "tp": 87,
+      "fp": 4,
+      "fn": 138,
+      "ms_per_item": 0.1497223332989961,
+      "robust_recall": {
+        "leetspeak": 0.0044444444444444444,
+        "homoglyph": 0.0044444444444444444,
+        "zero_width": 0.0044444444444444444
+      },
+      "kind": "regex rules (promoted v12)",
+      "params": 0,
+      "license": "project",
+      "deps": "stdlib"
+    },
+    "enmo_v21": {
+      "precision": 0.9626168224299065,
+      "recall": 0.4577777777777778,
+      "f1": 0.6204819277108433,
+      "tp": 103,
+      "fp": 4,
+      "fn": 122,
+      "ms_per_item": 0.14253066678065807,
+      "robust_recall": {
+        "leetspeak": 0.0044444444444444444,
+        "homoglyph": 0.0044444444444444444,
+        "zero_width": 0.0044444444444444444
+      },
+      "kind": "regex rules (v12 + two offline-gated jailbreak patterns)",
+      "params": 0,
+      "license": "project",
+      "deps": "stdlib"
+    },
+    "enmo_v22": {
+      "precision": 0.9626168224299065,
+      "recall": 0.4577777777777778,
+      "f1": 0.6204819277108433,
+      "tp": 103,
+      "fp": 4,
+      "fn": 122,
+      "ms_per_item": 0.1913593333059301,
+      "robust_recall": {
+        "leetspeak": 0.4577777777777778,
+        "homoglyph": 0.4577777777777778,
+        "zero_width": 0.4577777777777778
+      }
+    },
+    "protectai_base_v2": {
+      "precision": 1.0,
+      "recall": 0.19111111111111112,
+      "f1": 0.3208955223880597,
+      "tp": 43,
+      "fp": 0,
+      "fn": 182,
+      "ms_per_item": 33.09826799998215,
+      "robust_recall": {
+        "leetspeak": 0.5911111111111111,
+        "homoglyph": 0.72,
+        "zero_width": 0.7511111111111111
+      },
+      "kind": "fine-tuned DeBERTa classifier",
+      "repo": "protectai/deberta-v3-base-prompt-injection-v2",
+      "license": "Apache-2.0",
+      "deps": "torch, transformers"
+    },
+    "rebuff_heuristic": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 225,
+      "ms_per_item": 11.25756066661173,
+      "robust_recall": {
+        "leetspeak": 0.0,
+        "homoglyph": 0.0,
+        "zero_width": 0.0
+      },
+      "kind": "keyword heuristic",
+      "params": 0,
+      "license": "Apache-2.0",
+      "deps": "stdlib"
+    },
+    "vigil_yara": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 225,
+      "ms_per_item": 0.0017069999982292454,
+      "robust_recall": {
+        "leetspeak": 0.0,
+        "homoglyph": 0.0,
+        "zero_width": 0.0
+      },
+      "kind": "YARA rules as published (case-sensitive)",
+      "params": 0,
+      "license": "Apache-2.0",
+      "deps": "stdlib (ported)"
+    },
+    "vigil_yara_nocase": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 225,
+      "ms_per_item": 0.01261900004465133,
+      "robust_recall": {
+        "leetspeak": 0.0,
+        "homoglyph": 0.0,
+        "zero_width": 0.0
+      },
+      "kind": "YARA rules, case-insensitive variant",
+      "params": 0,
+      "license": "Apache-2.0",
+      "deps": "stdlib (ported)"
+    }
+  }
+}

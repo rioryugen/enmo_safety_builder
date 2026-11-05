@@ -43,15 +43,17 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from common import DATA, RUNS, SAFETY, jread, jsonl_append, jsonl_read  # noqa: I001 (sets sys.path)
+from common import BUILDER, DATA, RUNS, SAFETY, jread, jsonl_append, jsonl_read  # noqa: I001 (sets sys.path)
 import safety_runtime as rt
+import variants
 from judge import judge, judge_for
 from providers import Providers
 
 ALL_BENCH = ("harmbench", "advbench", "jbb", "xstest", "agentharm", "injection")
 
 
-def load_items(split: str, benches: List[str], n: Optional[int], offset: int = 0) -> List[Dict]:
+def load_items(split: str, benches: List[str], n: Optional[int], offset: int = 0,
+               transform: Optional[str] = None) -> List[Dict]:
     data = jread(DATA / "benchmarks.json")
     if data is None:
         sys.exit("run bench_data.py first")
@@ -59,13 +61,23 @@ def load_items(split: str, benches: List[str], n: Optional[int], offset: int = 0
     for b in benches:
         rows = data["benchmarks"][b].get(split, [])[offset:]
         items += rows[:n] if n else rows
+    if transform:
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "paper"))
+        from trigger_audit import TRANSFORMS, group_of
+        fn = TRANSFORMS[transform]
+        # obfuscate attack items only; ids carry the transform so cache keys and rows never collide
+        items = [{**r, "id": f"{r['id']}~{transform}", "prompt": fn(r["prompt"]),
+                  "untrusted": fn(r["untrusted"]) if r.get("untrusted") is not None else None}
+                 for r in items if group_of(r) == "attack"]
     return items
 
 
 def harness_for(cond: str, vn_dir: Optional[str]):
-    """bare | spot (spotlighting only) | v<k> (snapshot) | vN (current canonical)."""
+    """bare | spot (spotlighting only) | v<k> (snapshot) | vN (current canonical) | candidates/<cond>."""
     if cond in ("bare", "spot"):
         return None
+    if (BUILDER / "candidates" / cond).is_dir():
+        return variants.load_candidate(cond)
     if cond.startswith("v") and cond[1:].isdigit():
         return rt.load_harness(SAFETY / "harness" / "versions" / cond)
     return rt.load_harness(Path(vn_dir) if vn_dir else SAFETY / "harness")
@@ -81,7 +93,8 @@ def one(providers: Providers, model: str, cond: str, harness, item: Dict, run: i
         system, user = rt.bare(item["prompt"], untrusted)
         assessment = {}
     else:
-        system, user, assessment = rt.prepare(harness, item["prompt"], untrusted)
+        prep = variants.prepare if harness.get("candidate") else rt.prepare
+        system, user, assessment = prep(harness, item["prompt"], untrusted)
     r = providers.complete(model, system, user, run=run)
     reply, blocked = r["text"], False
     if harness is not None:
@@ -149,6 +162,8 @@ def main() -> int:
     ap.add_argument("--rpm", type=int, default=0, help="cap model requests per minute (0 = off)")
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--vn", default=None)
+    ap.add_argument("--transform", default=None, choices=["leetspeak", "homoglyph", "zero_width"],
+                    help="obfuscate the attack items with this transform (benign items are dropped)")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -157,7 +172,7 @@ def main() -> int:
         models = [m for m in args.models.split(",") if m] or providers.live_models()
         conds = [c for c in args.conditions.split(",") if c]
         benches = [b for b in args.benchmarks.split(",") if b]
-        items = load_items(args.split, benches, args.n, args.offset)
+        items = load_items(args.split, benches, args.n, args.offset, args.transform)
         judges = [j for j in args.judges.split(",") if j]
         n_gen = len(models) * len(conds) * len(items) * args.runs
         print(f"models: {models}\nconditions: {conds}\nitems: {len(items)} x runs {args.runs}"

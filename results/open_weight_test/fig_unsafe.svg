@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" font-family="Segoe UI,Arial" font-size="12">
+<rect width="760" height="340" fill="white"/>
+<text x="380.0" y="22" text-anchor="middle" font-size="14" font-weight="bold">Unsafe (harmful or injected), all attack prompts</text>
+<line x1="60" x2="740" y1="270.0" y2="270.0" stroke="#eee"/>
+<text x="54" y="274.0" text-anchor="end">0%</text>
+<line x1="60" x2="740" y1="224.0" y2="224.0" stroke="#eee"/>
+<text x="54" y="228.0" text-anchor="end">5%</text>
+<line x1="60" x2="740" y1="178.0" y2="178.0" stroke="#eee"/>
+<text x="54" y="182.0" text-anchor="end">10%</text>
+<line x1="60" x2="740" y1="132.0" y2="132.0" stroke="#eee"/>
+<text x="54" y="136.0" text-anchor="end">15%</text>
+<line x1="60" x2="740" y1="86.0" y2="86.0" stroke="#eee"/>
+<text x="54" y="90.0" text-anchor="end">20%</text>
+<line x1="60" x2="740" y1="40.0" y2="40.0" stroke="#eee"/>
+<text x="54" y="44.0" text-anchor="end">25%</text>
+<rect x="82.7" y="176.0" width="43.3" height="94.0" fill="#9e9e9e"/>
+<text x="104.3" y="172.0" text-anchor="middle" font-size="10">10</text>
+<rect x="128.0" y="180.0" width="43.3" height="90.0" fill="#ffb74d"/>
+<text x="149.7" y="176.0" text-anchor="middle" font-size="10">10</text>
+<rect x="173.3" y="237.3" width="43.3" height="32.7" fill="#00897b"/>
+<text x="195.0" y="233.3" text-anchor="middle" font-size="10">4</text>
+<rect x="218.7" y="233.2" width="43.3" height="36.8" fill="#555"/>
+<text x="240.3" y="229.2" text-anchor="middle" font-size="10">4</text>
+<text x="173.3" y="288" text-anchor="middle">gemma4-31b</text>
+<rect x="309.3" y="233.2" width="43.3" height="36.8" fill="#9e9e9e"/>
+<text x="331.0" y="229.2" text-anchor="middle" font-size="10">4</text>
+<rect x="354.7" y="245.5" width="43.3" height="24.5" fill="#ffb74d"/>
+<text x="376.3" y="241.5" text-anchor="middle" font-size="10">3</text>
+<rect x="400.0" y="225.0" width="43.3" height="45.0" fill="#00897b"/>
+<text x="421.7" y="221.0" text-anchor="middle" font-size="10">5</text>
+<rect x="445.3" y="225.0" width="43.3" height="45.0" fill="#555"/>
+<text x="467.0" y="221.0" text-anchor="middle" font-size="10">5</text>
+<text x="400.0" y="288" text-anchor="middle">glm-5.3-flash</text>
+<rect x="536.0" y="225.0" width="43.3" height="45.0" fill="#9e9e9e"/>
+<text x="557.7" y="221.0" text-anchor="middle" font-size="10">5</text>
+<rect x="581.3" y="233.2" width="43.3" height="36.8" fill="#ffb74d"/>
+<text x="603.0" y="229.2" text-anchor="middle" font-size="10">4</text>
+<rect x="626.7" y="237.3" width="43.3" height="32.7" fill="#00897b"/>
+<text x="648.3" y="233.3" text-anchor="middle" font-size="10">4</text>
+<rect x="672.0" y="237.3" width="43.3" height="32.7" fill="#555"/>
+<text x="693.7" y="233.3" text-anchor="middle" font-size="10">4</text>
+<text x="626.7" y="288" text-anchor="middle">qwen3.8-27B</text>
+<rect x="60" y="316" width="12" height="12" fill="#9e9e9e"/><text x="78" y="326">no harness</text>
+<rect x="180" y="316" width="12" height="12" fill="#ffb74d"/><text x="198" y="326">spotlighting only</text>
+<rect x="300" y="316" width="12" height="12" fill="#00897b"/><text x="318" y="326">gen-2 evolved v12</text>
+<rect x="420" y="316" width="12" height="12" fill="#555"/><text x="438" y="326">v21</text>
+</svg>

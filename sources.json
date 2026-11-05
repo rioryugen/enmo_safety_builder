@@ -17,6 +17,15 @@
       "role": "integration: agent skill that removes signs of AI-generated writing; used for the paper's final prose pass"
     },
     {
+      "name": "ecc",
+      "url": "https://github.com/affaan-m/ECC.git",
+      "ref": "main",
+      "path": "integrations/ecc",
+      "license": "MIT",
+      "ref_date": "2026-11-04T14:16:00",
+      "role": "integration: ECC skill/agent library (v2.2.3); paper workflow uses deep-research, scientific-thinking-literature-review, scientific-thinking-scholar-evaluation, article-writing, verification-loop"
+    },
+    {
       "name": "HarmBench",
       "url": "https://github.com/centerforaisafety/HarmBench.git",
       "ref": "main",

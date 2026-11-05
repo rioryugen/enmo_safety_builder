@@ -219,6 +219,7 @@ def main() -> int:
                  ("bare", "v8"), ("bare", "v9"), ("v9", "vN"), ("bare", "spot"),
                  ("spot", "vN"), ("v12", "vN"), ("bare", "v12"), ("spot", "v12")]
         pairs += [("vN", c) for c in conds if c not in COND_ORDER]
+        pairs += [(a, c) for c in conds if c.startswith("v22") for a in ("bare", "spot", "v12", "v21")]
         for a, b in pairs:
             if a in bad and b in bad:
                 tests[f"{m}|{a}->{b}"] = mcnemar(bad[a], bad[b])

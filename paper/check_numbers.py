@@ -52,7 +52,7 @@ def main() -> int:
     numbers = set(json.loads((HERE / "generated" / "numbers.json").read_text(encoding="utf-8")).values())
     for path in sorted((HERE.parent / "results").rglob("summary.json")):
         add_summary(numbers, json.loads(path.read_text(encoding="utf-8")))
-    text = (HERE / "paper.md").read_text(encoding="utf-8")
+    text = Path(sys.argv[1] if len(sys.argv) > 1 else HERE / "paper.md").read_text(encoding="utf-8")
     text = re.sub(r"```.*?```", "", text, flags=re.S)
     quoted = re.findall(r"(\d+\.\d)\s?%", text)
     missing = sorted({q for q in quoted if q not in numbers})
