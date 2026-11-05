@@ -58,6 +58,18 @@ wrappers built from deterministic rules should report activation alongside
 outcomes and should check, before spending model calls, that a proposed rule
 change touches enough evaluation items to be testable.
 
+Keywords: rule-based guardrails; trigger coverage; obfuscation; prompt-injection detection; evolution ledger; evaluation methodology
+
+## Key findings
+
+1. The promoted v12 rules fired on 87 of 225 attack items (38.7%) and on 4 of 75 benign items (5.3%). 16 of the 34 patterns never fired on any of the 558 items.
+2. Three trivial surface transforms (leetspeak, Cyrillic homoglyphs, zero-width spaces) cut attack coverage from 38.7% to 0.4%.
+3. Pattern-only updates changed the assessment of at most 2 of 300 test items and of 0 development items, so the acceptance gate could not see them.
+4. Attack items the rules flagged were not handled more safely than items they missed (Fisher p from 0.30 to 1.0 across twelve model-condition pairs).
+5. The "no signal detected" clauses made agentic harm worse than no harness on obfuscated attacks (Haiku 5.5 0% to 16%, MAI Code Flash 12% to 28%).
+6. Input normalisation restores activation under obfuscation from 0.4% to 45.8% without adding benign flags, but adds no protection beyond the reworded clause.
+7. Enmo's rules flag more attack items than ProtectAI's DeBERTa classifier (38.7% versus 19.1%), while the classifier is better on injection documents (36.0% versus 14.0%).
+
 ## 1. Introduction
 
 A wrapper that cannot change model weights protects a request through

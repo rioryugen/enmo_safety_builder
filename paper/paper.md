@@ -46,6 +46,17 @@ evading the keyword screen bought extra permission. A reworded clause and an
 input-normalisation step form harness v22, at a measured cost in benign
 tool-task refusal.
 
+Keywords: language model safety; runtime harness; self-evolving prompts; prompt injection; jailbreaks; agentic harm; evaluation methodology
+
+## Key findings
+
+1. On six policy models, v12 cut the unsafe rate significantly on two (MAI Code 1.1 Flash, 12.9% to 7.1%, p = 0.035; Gemma 4 31B, 10.2% to 3.6%, p = 0.036) and not on the other four.
+2. Spotlighting alone removed every injected label on all six models.
+3. Whether the rules fired did not predict the outcome: flagged and unflagged attack items had similar unsafe rates (Fisher p from 0.30 to 1.0).
+4. The "no signal detected" helpfulness clauses acted as permissions. Removing or rewording them left the unsafe rate unchanged (p from 0.15 to 1.0) and raised refusal of benign tool tasks on all four models tested, by 4 to 28 points.
+5. Keyword rules fail on trivial obfuscation: attack coverage fell from 38.7% to 0.4%. Input normalisation in v22 restores it to 45.8% without extra benign flags.
+6. Every cell is one run, so these estimates do not establish a general safety improvement.
+
 ## 1 Introduction
 
 Most teams that deploy a language model cannot retrain it. They choose a model

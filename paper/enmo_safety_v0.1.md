@@ -28,6 +28,16 @@ signal was detected; a reworded clause and input normalisation form v22 at a
 measured cost in benign tool-task refusal. Each cell was one run, so these
 estimates do not establish a general safety improvement.
 
+Keywords: external safety harness; weight-agnostic oversight; spotlighting; benign refusal; cross-model evaluation
+
+## Key findings
+
+1. On a 290-item holdout, v12 had an unsafe rate of 0.5% for Claude Haiku 4.5 and 1.9% for GPT-5.3-Codex, against 2.8% and 2.3% bare. None of the paired comparisons was significant.
+2. On a fresh 300-item split with six models, v12 cut the unsafe rate significantly on two (MAI Code 1.1 Flash, 12.9% to 7.1%, p = 0.035; Gemma 4 31B, 10.2% to 3.6%, p = 0.036) and raised agentic-harm labels on two.
+3. Spotlighting alone removed every injected label on all six models.
+4. The agentic regression traces to the helpfulness clauses. The reworded clause and input normalisation in v22 trade it for more refusal of benign tool tasks.
+5. Each cell was one run, so these estimates do not establish a general safety improvement.
+
 ## 1. Introduction
 
 Many deployers use models they cannot fine-tune. Their main options are
@@ -236,8 +246,8 @@ responsible for the content. Enmo is not an author.
 ## References
 
 - Enmo Safety: runtime, harness rules, version snapshots, and evolution ledger. [github.com/rioryugen/enmo_safety](https://github.com/rioryugen/enmo_safety).
-- SafeEvolve. [arXiv:2609.02786](https://huggingface.co/papers/2609.02786).
-- SafeEvalAgent. [arXiv:2509.26100](https://huggingface.co/papers/2509.26100).
-- WARD. [arXiv:2605.15030](https://huggingface.co/papers/2605.15030).
-- MalSkillBench. [arXiv:2606.07131](https://huggingface.co/papers/2606.07131).
-- ABC. [arXiv:2507.02825](https://huggingface.co/papers/2507.02825).
+- Q. Liu, L. Yuan, D. Guo et al. “SafeEvolve: Harness-Policy Co-Evolution from Agent Experience for Safety Alignment.” [arXiv:2609.02786](https://huggingface.co/papers/2609.02786), 2026.
+- Y. Wang, Y. Teng, X. Li et al. “SafeEvalAgent: Toward Agentic and Self-Evolving Safety Evaluation of LLMs.” [arXiv:2509.26100](https://huggingface.co/papers/2509.26100), 2025.
+- T. Cao, Y. Chen, H. Cao et al. “WARD: Adversarially Robust Defense of Web Agents Against Prompt Injections.” [arXiv:2605.15030](https://huggingface.co/papers/2605.15030), 2026.
+- W. Guo, W. Zeng, C. Liu et al. “MalSkillBench: A Runtime-Verified Benchmark of Malicious Agent Skills.” [arXiv:2606.07131](https://huggingface.co/papers/2606.07131), 2026.
+- Y. Zhu, T. Jin, Y. Pruksachatkun et al. “Establishing Best Practices for Building Rigorous Agentic Benchmarks.” [arXiv:2507.02825](https://huggingface.co/papers/2507.02825), 2025.
