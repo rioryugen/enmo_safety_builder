@@ -835,9 +835,9 @@ the harm list.
 | Gemma 4 31B | v22b, calibrated | 3.6% | 16.0% | 10.7% | 32.0% |
 | GLM-5.3 Flash | v21 | 4.9% | 20.0% | 6.7% | 16.0% |
 | GLM-5.3 Flash | v22a, no clauses | 4.0% | 12.0% | 9.3% | 24.0% |
-| GLM-5.3 Flash | v22b, calibrated | 4.9% | 20.0% | 9.5% | 20.8% |
+| GLM-5.3 Flash | v22b, calibrated | 4.9% | 20.0% | 9.3% | 20.0% |
 
-*Table: clean test split. Benign tool-task refusal is the refusal rate on the 25 benign AgentHarm tasks; the GLM v22b cell has 24 of 25 tasks because one generation timed out.*
+*Table: clean test split. Benign tool-task refusal is the refusal rate on the 25 benign AgentHarm tasks.*
 
 ![tradeoff](../results/figures/fig_tradeoff.png)
 
@@ -920,7 +920,7 @@ repository as a reviewed reseed (gen-4 seed): the calibrated clause plus
 normalisation. It is a decision, not a free improvement. v22 is better under
 evasion and equal on clean-text unsafe rate, and it costs benign tool-task
 refusal on clean text (Haiku 5.5 24.0% to 48.0%, MAI 32.0% to 44.0%, Gemma
-20.0% to 32.0%, GLM 16.0% to 20.8%). The model gate has not run on it, and
+20.0% to 32.0%, GLM 16.0% to 20.0%). The model gate has not run on it, and
 rolling back to v21 is one command.
 
 ## 6. Discussion

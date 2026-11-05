@@ -153,7 +153,7 @@ harmful AgentHarm tasks. On leetspeak-obfuscated attacks they made agentic
 harm worse than no harness (Haiku 5.5 0.0% to 16.0%, MAI Code 1.1 Flash 12.0%
 to 28.0%). Removing them, or rewording them so they do not claim safety,
 lowers agentic harm on some models but raises benign tool-task refusal on
-all four tested (by 5 to 28 points); the reworded clause plus an input
+all four tested (by 4 to 28 points); the reworded clause plus an input
 normalisation step now ships as v22. The overall unsafe rate did not change
 significantly in any comparison, so the clauses trade harmful compliance for
 benign helpfulness at roughly equal rates, and the harness cannot do better

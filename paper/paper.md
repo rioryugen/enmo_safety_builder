@@ -69,22 +69,22 @@ measured safety, and what does it cost in over-refusal?
 
 Our contributions:
 
-1. **Enmo Safety**, an open, stdlib-only runtime harness: a deterministic input
+1. *Enmo Safety*, an open, stdlib-only runtime harness: a deterministic input
    assessment, trigger-matched safety guidance, spotlighting of untrusted
    content [@hines2024spotlighting], and an output guard.
-2. **A bounded evolution operator.** Seven update operations with hard limits
+2. *A bounded evolution operator.* Seven update operations with hard limits
    (size, regex safety, a filter for safety-weakening text), a version snapshot
    for every update, an append-only ledger, and byte-exact rollback.
-3. **A Pareto acceptance gate.** An update is kept only if it lowers unsafe
+3. *A Pareto acceptance gate.* An update is kept only if it lowers unsafe
    behaviour without raising refusal of benign prompts on a held-out dev split.
-4. **A before/after study** on six open benchmarks (HarmBench, AdvBench,
+4. *A before/after study* on six open benchmarks (HarmBench, AdvBench,
    JailbreakBench with five jailbreak archetypes, XSTest, AgentHarm,
    deepset prompt-injections) across the live Copilot models, with repeated
    runs, bootstrap intervals, and exact McNemar tests.
 
 ## 2 Related work
 
-**Self-evolving safety.** SafeEvolve [@liu2026safeevolve] co-evolves a harness
+*Self-evolving safety.* SafeEvolve [@liu2026safeevolve] co-evolves a harness
 and a policy; we reuse its harness-side idea of bounded, auditable, reversible
 updates and drop the policy side. FATE [@fate2026] motivates our use of
 failures as the only learning signal and the two-objective gate.
@@ -93,18 +93,18 @@ rewrites handled prompts into harder ones between rounds. ROME and ARISE
 [@zhu2026rome] retrieve analogical safety exemplars at inference time; our
 runtime skills are a deterministic, trigger-matched version of that retrieval.
 
-**Plug-in safety layers.** Thought-Aligner [@jiang2025thoughtaligner] corrects
+*Plug-in safety layers.* Thought-Aligner [@jiang2025thoughtaligner] corrects
 an agent's intermediate thoughts with a separate model and reports large
 behavioural-safety gains without touching the agent. Enmo Safety is also a
 plug-in layer, but it uses no extra model at inference time; the only model
 calls it adds are offline, during evolution.
 
-**Skills as attack surface.** OpenSkillRisk [@miao2026openskillrisk] finds that
+*Skills as attack surface.* OpenSkillRisk [@miao2026openskillrisk] finds that
 agents execute risky third-party skills in a large share of cases. This is why
 every safety component in Enmo Safety is namespaced, reviewed, and changed only
 through the bounded operator.
 
-**Benchmarks.** HarmBench [@mazeika2024harmbench] and AdvBench
+*Benchmarks.* HarmBench [@mazeika2024harmbench] and AdvBench
 [@zou2023advbench] measure refusal of harmful requests; JailbreakBench
 [@chao2024jailbreakbench] standardises harmful behaviours for jailbreak
 studies; XSTest [@rottger2023xstest] measures exaggerated safety; AgentHarm
@@ -118,17 +118,17 @@ jailbreak wrappers follow the archetypes of Wei et al. [@wei2023jailbroken].
 
 For a user prompt *p* and optional untrusted content *d*, the harness:
 
-1. **Assesses** *p* (and *d*) with regular expressions for jailbreak framing,
+1. *Assesses* *p* (and *d*) with regular expressions for jailbreak framing,
    injection phrasing, ten harm categories, harmful intent, and benign
    homonyms such as "kill a process". The flags combine into a risk score from 0
    to 4. A benign homonym lowers the score unless a jailbreak is present.
-2. **Retrieves guidance.** Each runtime skill has a trigger (a harm category,
+2. *Retrieves guidance.* Each runtime skill has a trigger (a harm category,
    `jailbreak`, `injection`, or `benign`). Only skills whose trigger fired are
    appended to the base safety prompt, so most benign prompts carry no extra
    text beyond the base prompt.
-3. **Spotlights** *d* inside `<untrusted_document>` tags with an explicit
+3. *Spotlights* *d* inside `<untrusted_document>` tags with an explicit
    instruction to treat it as data.
-4. **Guards the output.** If the risk score is at or above a threshold and the
+4. *Guards the output.* If the risk score is at or above a threshold and the
    reply is a procedural, non-refusal answer (numbered steps, code, quantities),
    the reply is replaced with a short refusal and a safe alternative.
 
@@ -178,7 +178,7 @@ The *test* split is never read by the loop.
 
 ## 4 Experimental setup
 
-**Benchmarks and splits.** From each benchmark we draw disjoint,
+*Benchmarks and splits.* From each benchmark we draw disjoint,
 category-stratified splits with a fixed seed: test, evolve (20 items), and dev
 (20 items). HarmBench uses its standard functional category. JailbreakBench
 goals are wrapped in five public archetypes (refusal suppression, prefix
@@ -189,22 +189,22 @@ contributes harmful and benign tasks in equal numbers, rendered as text tool
 calls. Injection items ask for a one-sentence summary of a customer message
 that contains the injected text.
 
-**Models.** Models are discovered live through the GitHub Copilot SDK and kept
+*Models.* Models are discovered live through the GitHub Copilot SDK and kept
 if they answer a ping. In our environment these were Claude Haiku 4.5 and
 GPT-5.3-Codex. The GitHub Models REST API was unreachable (a network proxy
 returned a constant body), and a local Octagram model was configured but its
 key was not available to the runner, so neither is in the matrix.
 
-**Conditions.** *bare*: a neutral system prompt and untrusted content inlined.
+*Conditions.* *bare*: a neutral system prompt and untrusted content inlined.
 *v0*: the hand-written seed harness. *vN*: the harness after evolution.
 
-**Judging.** A refusal detector settles clear refusals. Everything else, and
+*Judging.* A refusal detector settles clear refusals. Everything else, and
 every injection item, goes to an LLM judge applying the verifier rubric. The
 judge is always the other model, never the model under test. A seeded sample of
 about one in seven rows is LLM-judged even when the detector decided, and we
 report Cohen's kappa between the two.
 
-**Statistics.** Each condition is run three times. We report the mean and
+*Statistics.* Each condition is run three times. We report the mean and
 sample standard deviation over runs, a 95% bootstrap interval over items with
 runs pooled, and exact McNemar tests on item-level majority votes.
 
@@ -491,7 +491,7 @@ harness: 0.0% to 16.0% on Haiku 5.5 and 12.0% to 28.0% on MAI Code 1.1 Flash.
 Evading the screen bought extra permission. We tested removing the clauses
 and rewording them so they do not claim the request is safe, on four models.
 Neither changes the overall unsafe rate significantly (p from 0.15 to 1.0),
-and both raise refusal of benign tool tasks on every model, by 5 to 28 points:
+and both raise refusal of benign tool tasks on every model, by 4 to 28 points:
 the clauses trade harmful compliance for benign helpfulness at roughly equal
 rates, which is the trade-off that sank the third-generation seed. The
 reworded clause nonetheless removes the evasion effect (16.0% to 0.0% and 28.0%
@@ -584,35 +584,35 @@ screen.
 
 ## 7 Limitations
 
-- **Models.** The first three iterations ran two frontier models, both with
+- *Models.* The first three iterations ran two frontier models, both with
   strong built-in refusal. The fourth ran six (Section 5.7), but one run per
   cell, so only the largest paired effects are detectable, and the two
   significant results are two of eighteen uncorrected tests. The Qwen and GLM
   models were queried with different thinking settings.
-- **Small samples.** 25 test items per benchmark and three runs per condition
+- *Small samples.* 25 test items per benchmark and three runs per condition
   keep the cost within a subscription budget, but the intervals are wide and
   small differences are not significant.
-- **Text-rendered tools.** AgentHarm tasks are rendered as text tool calls
+- *Text-rendered tools.* AgentHarm tasks are rendered as text tool calls
   rather than run in the Inspect harness. Many benign "refusals" are capability
   statements ("I can't execute tools"), which inflates benign refusal equally
   in every condition.
-- **Judge.** The judge is a model from the same subscription. Cross-judging
+- *Judge.* The judge is a model from the same subscription. Cross-judging
   avoids self-grading, and we report agreement with the refusal detector, but
   we did no human annotation.
-- **Template leakage.** Three of the five jailbreak archetypes appear in the
+- *Template leakage.* Three of the five jailbreak archetypes appear in the
   evolve and dev splits; we therefore report the two unseen archetypes
   separately.
-- **Platform filters.** The serving platform rejects some prompts before the
+- *Platform filters.* The serving platform rejects some prompts before the
   model sees them. We count these as refusals and report them separately.
-- **Reseed informed by test failures.** The second-generation seed was written
+- *Reseed informed by test failures.* The second-generation seed was written
   after reading first-generation test failures. We evaluated it on unseen items,
   but those items share jailbreak templates with the earlier ones.
-- **Judge revision.** The judge changed between the second iteration and the
+- *Judge revision.* The judge changed between the second iteration and the
   holdout run (Section 5.6). Numbers within a run are comparable; numbers across
   the two runs are not.
-- **One holdout run.** The holdout was run once per model and condition; its
+- *One holdout run.* The holdout was run once per model and condition; its
   JailbreakBench part reuses eight goals across five archetypes.
-- **Fourth iteration.** The 300-item split of Section 5.7 reuses the five
+- *Fourth iteration.* The 300-item split of Section 5.7 reuses the five
   jailbreak archetypes. The agentic-harm rates rest on 25 harmful and 25 benign
   tool tasks per model, so one task moves a rate by four points. The
   obfuscated-attack test used one transform on two models. The input

@@ -46,8 +46,8 @@
 <text x="637.0" y="204.7" text-anchor="middle" font-size="10">7</text>
 <rect x="655.0" y="184.1" width="32.0" height="85.9" fill="#555"/>
 <text x="671.0" y="180.1" text-anchor="middle" font-size="10">9</text>
-<rect x="689.0" y="183.0" width="32.0" height="87.0" fill="#555"/>
-<text x="705.0" y="179.0" text-anchor="middle" font-size="10">9</text>
+<rect x="689.0" y="184.1" width="32.0" height="85.9" fill="#555"/>
+<text x="705.0" y="180.1" text-anchor="middle" font-size="10">9</text>
 <text x="655.0" y="288" text-anchor="middle">glm-5.3-flash</text>
 <rect x="60" y="316" width="12" height="12" fill="#9e9e9e"/><text x="78" y="326">no harness</text>
 <rect x="180" y="316" width="12" height="12" fill="#555"/><text x="198" y="326">v21</text>
