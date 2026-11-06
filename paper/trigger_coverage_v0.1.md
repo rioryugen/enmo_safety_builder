@@ -2,7 +2,7 @@
 
 *Activation is not protection: auditing the input triggers of a rule-based safety harness across six public benchmarks, twenty harness versions, and four public detectors*
 
-Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K S (sarun.kumar.k.s@intel.com), Allan Kevin T (allan.kevin.t@intel.com), Chirag Vaidya (chirag.vaidya@intel.com), and Vrishank Tiwari (vrishank.tiwari@intel.com), Intel Corporation
+Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K. S. (sarun.kumar.k.s@intel.com), Allan Kevin T. (allan.kevin.t@intel.com), Chirag Vaidya (chirag.vaidya@intel.com), and Vrishank Tiwari (vrishank.tiwari@intel.com), Intel Corporation
 
 Preprint, version 0.1 working draft, 4 November 2026. Code, harness, version snapshots and ledger: [github.com/rioryugen/enmo_safety](https://github.com/rioryugen/enmo_safety).
 
