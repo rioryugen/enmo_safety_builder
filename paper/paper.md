@@ -2,7 +2,7 @@
 
 *A bounded, self-evolving safety harness, evaluated on six open benchmarks and six policy models*
 
-Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K S (sarun.kumar.k.s@intel.com), and Allan Kevin T (allan.kevin.t@intel.com), Intel Corporation
+Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K S (sarun.kumar.k.s@intel.com), Allan Kevin T (allan.kevin.t@intel.com), Chirag Vaidya (chirag.vaidya@intel.com), and Vrishank Tiwari (vrishank.tiwari@intel.com), Intel Corporation
 
 Version 2 draft, 5 November 2026. Code, harness, version snapshots and ledger: [github.com/rioryugen/enmo_safety](https://github.com/rioryugen/enmo_safety).
 

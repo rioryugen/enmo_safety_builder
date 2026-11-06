@@ -52,7 +52,7 @@ html { font-family: "Times New Roman", Cambria, Georgia, serif; font-size: 10.5p
 body { max-width: 184mm; margin: 0 auto; }
 h1 { font-size: 18.5pt; text-align: center; margin: 0 0 4pt; line-height: 1.18; }
 .subtitle { text-align: center; font-size: 11.3pt; font-style: italic; margin: 0 6mm 9pt; }
-.authors { display: flex; justify-content: center; gap: 9mm; margin: 4pt 0 2pt; font-size: 10.6pt; text-align: center; }
+.authors { display: flex; flex-wrap: wrap; justify-content: center; gap: 4pt 9mm; margin: 4pt 0 2pt; font-size: 10.6pt; text-align: center; }
 .authors .mail { font-family: Consolas, monospace; font-size: 8.2pt; color: var(--accent); }
 .affil { text-align: center; font-size: 9pt; color: var(--mute); margin: 3pt 0 4pt; }
 .meta { text-align: center; font-size: 8.4pt; color: var(--mute); margin-bottom: 11pt; }

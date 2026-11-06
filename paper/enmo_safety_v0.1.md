@@ -2,7 +2,7 @@
 
 *Evaluating a weight-agnostic safety harness against a bare model and a spotlighting baseline on six policy models and a 290-item holdout*
 
-Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K S (sarun.kumar.k.s@intel.com), and Allan Kevin T (allan.kevin.t@intel.com), Intel Corporation
+Mohammed Nayeem Khan (mohammed.nayeem.khan@intel.com, mnknayeem@gmail.com), Sarun Kumar K S (sarun.kumar.k.s@intel.com), Allan Kevin T (allan.kevin.t@intel.com), Chirag Vaidya (chirag.vaidya@intel.com), and Vrishank Tiwari (vrishank.tiwari@intel.com), Intel Corporation
 
 Preprint, version 0.2 working draft, 5 November 2026. Code and harness: [github.com/rioryugen/enmo_safety](https://github.com/rioryugen/enmo_safety).
 
